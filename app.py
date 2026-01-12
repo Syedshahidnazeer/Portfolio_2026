@@ -46,9 +46,8 @@ def main() -> None:
                 display: none !important; 
             }
             
-            /* Ensure iframe takes full height */
+            /* Ensure iframe takes full width */
             iframe {
-                height: 100vh !important;
                 width: 100vw !important;
             }
             
@@ -102,7 +101,7 @@ def main() -> None:
 
     # 4. Render Application
     # Using height=1000 and scrolling=True to ensure full viewport usage
-    components.html(app_html, height=700, scrolling=True)
+    components.html(app_html, height=600, scrolling=True)
 
 if __name__ == "__main__":
     main()
