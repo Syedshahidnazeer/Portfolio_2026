@@ -33,7 +33,7 @@ def get_intro_card_html() -> str:
         <div style="font-family:'JetBrains Mono'; color:var(--accent); font-size:0.8rem; font-weight:700; margin-bottom:0.5rem; letter-spacing:1px;">
             {PROFILE['title'].upper()}
         </div>
-        <h1 class="intro-title">Hey, I'm <br><span style="color:var(--text)">{display_name}</span></h1>
+        <h1 class="intro-title"><span style="color:var(--text)">{PROFILE['name']}</span></h1>
         <p class="intro-sub">
             {PROFILE['intro_text'].replace(chr(10), '<br>')}
         </p>

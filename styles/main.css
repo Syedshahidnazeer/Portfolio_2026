@@ -106,10 +106,10 @@ body {
     padding: 1rem 3rem;
     display: grid;
     grid-template-columns: 1fr 1.2fr 1fr;
-    gap: 1.5rem;
+    gap: 1rem;
     max-width: 1600px;
     margin: 0 auto;
-    min-height: calc(100vh - 120px);
+    min-height: 90vh;
 }
 
 .col-left {
@@ -155,7 +155,7 @@ body {
     background: var(--card-bg);
     border: 2px solid var(--border);
     border-radius: 26px;
-    padding: 1.8rem;
+    padding: 1.2rem;
     box-shadow: 0 10px 30px rgba(74, 59, 50, 0.02);
     transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     position: relative;
@@ -199,7 +199,7 @@ body {
 /* Typography & Widgets */
 .intro-title {
     font-family: 'Fredoka', sans-serif;
-    font-size: 2.8rem;
+    font-size: 2.2rem;
     line-height: 1.1;
     margin-bottom: 0.8rem;
     letter-spacing: -1px;
@@ -207,7 +207,7 @@ body {
 
 .intro-sub {
     font-family: 'Inter';
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: var(--text-dim);
     line-height: 1.6;
     max-width: 90%;
@@ -241,7 +241,7 @@ body {
 .stat-val {
     font-family: 'JetBrains Mono';
     font-weight: 700;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 
 .stat-label {
@@ -296,8 +296,8 @@ body {
 }
 
 .mascot-face {
-    width: 380px;
-    height: 380px;
+    width: 320px;
+    height: 320px;
     background: #FFD166;
     border-radius: 50%;
     position: relative;
@@ -319,13 +319,13 @@ body {
 
 .eyes-row {
     display: flex;
-    gap: 35px;
+    gap: 30px;
     margin-bottom: 35px;
 }
 
 .eye {
-    width: 75px;
-    height: 75px;
+    width: 60px;
+    height: 60px;
     background: #FFF;
     border-radius: 50%;
     position: relative;

@@ -14,7 +14,7 @@ PROFILE = {
         "Twitter": "#"
     },
     "tagline": "Visualizing Intelligence.",
-    "intro_text": "A versatile **AI Generalist** driving innovation at the forefront of intelligent system development.\n\nMastering **Generative AI**, Large Language Models (LLMs), Natural Language Processing (NLP), and advanced Data Science."
+    "intro_text": "Driving innovation with Generative AI and scalable Intelligent Systems."
 }
 
 SKILLS = [
