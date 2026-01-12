@@ -28,6 +28,37 @@ def main() -> None:
         page_icon="⚡"
     )
 
+    # 1.1 Global CSS Injection (Fix for Deployment)
+    # This must be done in the parent Streamlit context, not inside the iframe.
+    st.markdown("""
+        <style>
+            /* Remove default Streamlit padding */
+            .block-container {
+                padding-top: 0rem !important;
+                padding-bottom: 0rem !important;
+                padding-left: 0rem !important;
+                padding-right: 0rem !important;
+                max-width: 100% !important;
+            }
+            
+            /* Hide Streamlit UI elements */
+            header, #MainMenu, footer { 
+                display: none !important; 
+            }
+            
+            /* Ensure iframe takes full height */
+            iframe {
+                height: 100vh !important;
+                width: 100vw !important;
+            }
+            
+            /* Hide scrollbars for cleaner look */
+            .main {
+                overflow: hidden;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
     # 2. Asset Loading
     # Using robust utility functions from utils.py
     css_content = load_css("styles/main.css")
@@ -64,12 +95,7 @@ def main() -> None:
             {particles_script}
         </script>
         
-        <!-- Remove Streamlit Padding Override -->
-        <style>
-            .block-container {{ padding: 0 !important; }}
-            header, #MainMenu, footer {{ display: none !important; }}
-            iframe {{ width: 100vw !important; height: 100vh !important; }}
-        </style>
+
     </body>
     </html>
     """
