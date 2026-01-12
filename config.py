@@ -115,28 +115,45 @@ CERTIFICATIONS = [
         "issuer": "Excelr",
         "date": "Jan 2023",
         "desc": "Machine Learning, Python, Data Viz",
-        "image": "Certifications/Excelr(Data Science)_Certification.jpg"
+        "image": "Certifications/Excelr(Data Science)_Certification.jpg",
+        "logo": "logos/excelr_logo.png"
     },
     {
         "title": "Business Analytics",
         "issuer": "Internshala",
         "date": "Nov 2022",
         "desc": "Data Analysis, Statistical Models",
-        "image": "Certifications/Internshala(Business Analytics)_Certification.jpg"
+        "image": "Certifications/Internshala(Business Analytics)_Certification.jpg",
+        "logo": "logos/internshala_logo.png"
+    }
+]
+
+EXPERIENCE = [
+    {
+        "role": "Junior Content Writer",
+        "company": "Rapyder",
+        "location": "Bengaluru, India",
+        "date": "April 2025 - Present",
+        "logo": "logos/Rapyder_logo.png",
+        "desc": "Data Science Enthusiast | Specializing in GenAI Content Creation at Rapyder Cloud Solutions #RapyDear",
+        "details": [
+            "Crafting engaging and informative content related to data science, AI, and cloud technologies.",
+            "Developing content strategies for various platforms, including blogs, social media, and marketing materials.",
+            "Collaborating with technical teams to ensure accuracy and relevance of content."
+        ]
     },
     {
-        "title": "AWS Cloud Practitioner",
-        "issuer": "Amazon Web Services",
-        "date": "Nov 2022",
-        "desc": "Cloud Fundamentals & Services",
-        "image": "logos/AI_logo.jpg" 
-    },
-    {
-        "title": "Google Data Analytics",
-        "issuer": "Google",
-        "date": "Nov 2022",
-        "desc": "Data Analysis Professional Cert",
-        "image": "logos/analytics_logo.png"
+        "role": "Data Science Intern",
+        "company": "AI Variant",
+        "location": "Remote",
+        "date": "March 2023 - June 2023",
+        "logo": "logos/Aivariant_logo.jpg",
+        "desc": "During this internship, I developed several data-driven applications. Key projects included an oil price prediction app (achieving <2% variance), a real/fake news detection web app using NLP, and a Google Play Store app rating prediction model (93% accuracy).",
+        "details": [
+            "Developed an oil price prediction app using Python and yfinance, achieving a variance of less than 2%.",
+            "Created a fake news detection web app leveraging Natural Language Processing (NLP) techniques.",
+            "Analyzed Google Play Store app data to build a rating prediction model with 93% accuracy."
+        ]
     }
 ]
 

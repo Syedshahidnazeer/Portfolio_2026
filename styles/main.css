@@ -8,6 +8,23 @@
     --accent: #FF9F1C;
     --accent-2: #2EC4B6;
     --accent-3: #FF5400;
+    --nav-bg: rgba(249, 244, 239, 0.95);
+    --bg-secondary: #F0F2F5;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+body.dark-mode {
+    --bg: #0F0F12;
+    --card-bg: #1A1A1E;
+    --text: #F0F0F0;
+    --text-dim: #A0A0A0;
+    --border: #2A2A2E;
+    --accent: #FF9F1C;
+    --accent-2: #40FFF0;
+    --accent-3: #FF5400;
+    --nav-bg: rgba(15, 15, 18, 0.95);
+    --bg-secondary: #131316;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 * {
@@ -22,7 +39,7 @@ body {
     font-family: 'Inter', sans-serif;
     overflow-x: hidden;
     width: 100vw;
-    transition: background 0.8s ease;
+    transition: background 0.5s ease, color 0.5s ease;
 }
 
 /* NAVBAR */
@@ -36,7 +53,7 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 0 3rem;
-    background: rgba(249, 244, 239, 0.95);
+    background: var(--nav-bg);
     backdrop-filter: blur(12px);
     z-index: 1000;
     border-bottom: 2px solid var(--border);
@@ -798,4 +815,98 @@ body {
     .cyber-card {
         min-height: 250px;
     }
+}
+
+/* ===========================
+   INTERACTIVE EDUCATION VIEW
+   =========================== */
+
+/* 1. 3D Tilt Effect Base */
+.tilt-card {
+    transition: transform 0.1s;
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+/* 2. Staggered Entrance Animation */
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.anim-stagger {
+    opacity: 0;
+    /* Initially hidden */
+    animation: slideUpFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* 3. Progress Bar Styles */
+.grade-bar-container {
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    width: 100%;
+    margin-top: 6px;
+    overflow: hidden;
+}
+
+.grade-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    width: 0%;
+    /* Start at 0 */
+    /* Animation definition */
+    animation: fillBar 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    animation-delay: 0.5s;
+    /* Wait for card to appear */
+}
+
+@keyframes fillBar {
+    to {
+        width: var(--percent);
+    }
+}
+
+
+/* 4. Spotlight Effect (Phase 2) */
+.spotlight-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.spotlight-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(600px circle at var(--x, 0px) var(--y, 0px),
+            rgba(255, 159, 28, 0.15),
+            transparent 40%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.spotlight-card:hover::before {
+    opacity: 1;
+}
+
+/* 5. Clickable Confetti Card */
+.confetti-trigger {
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.confetti-trigger:active {
+    transform: scale(0.95) rotate(-2deg);
 }

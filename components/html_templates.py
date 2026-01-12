@@ -6,7 +6,7 @@ It decouples the logic from the main application file, ensuring better maintaina
 Data is pulled dynamically from `config.py`.
 """
 from typing import List, Dict, Any
-from config import PROFILE, SKILLS, PROJECTS, STATS, EDUCATION, CERTIFICATIONS, LOGOS, RESUMES
+from config import PROFILE, SKILLS, PROJECTS, STATS, EDUCATION, CERTIFICATIONS, LOGOS, RESUMES, EXPERIENCE
 from utils import img_to_bytes
 # Force Deploy Update
 
@@ -18,13 +18,17 @@ def get_navbar_html() -> str:
         <div class="nav-pill">
             <a onclick="switchView('main')" id="link-main" class="nav-item active">Home</a>
             <a onclick="switchView('education')" id="link-education" class="nav-item">Education</a>
+            <a onclick="switchView('experience')" id="link-experience" class="nav-item">Experience</a>
             <a onclick="switchView('skills')" id="link-skills" class="nav-item">Skills</a>
-            <a onclick="switchView('projects')" id="link-projects" class="nav-item">Work</a>
+            <a onclick="switchView('projects')" id="link-projects" class="nav-item">Projects</a>
             <a onclick="switchView('certifications')" id="link-certifications" class="nav-item">Certifications</a>
             <a onclick="switchView('contact')" id="link-contact" class="nav-item">Contact</a>
         </div>
-        <div class="nav-status">
-            <span style="color:#2EC4B6">●</span> {STATS['status'].upper()}
+        <div class="nav-status" style="display:flex; align-items:center; gap:15px;">
+            <button onclick="toggleDarkMode()" id="theme-toggle" style="background:none; border:none; cursor:pointer; font-size:1.2rem; padding:5px; border-radius:50%; transition:transform 0.3s ease;">
+                🌓
+            </button>
+            <span><span style="color:#2EC4B6">●</span> {STATS['status'].upper()}</span>
         </div>
     </nav>
     """
@@ -139,126 +143,50 @@ def get_projects_view_html() -> str:
     Generates the 'Cyberpunk Grid' for the Work View.
     Includes scoped canvas for particles and specific Bento widgets.
     """
-    # Helper to get project at index safely
-    def p(idx: int) -> Dict[str, Any]: 
-        return PROJECTS[idx] if idx < len(PROJECTS) else PROJECTS[0]
+    
+    cards_html = ""
+    for i, project in enumerate(PROJECTS):
+        delay = 0.1 + (i * 0.1)
+        
+        # Tags Generation
+        tags_html = "".join([f'<span class="skill-tag" style="font-size:0.75rem; padding:4px 10px; background:var(--bg-secondary); border:1px solid var(--border); color:var(--text-dim);">{tag}</span>' for tag in project.get('tags', [])])
+        
+        gradient = project.get('gradient', 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)')
+
+        cards_html += f"""
+        <div class="card tilt-card spotlight-card anim-stagger" data-tilt style="padding:0; overflow:hidden; border:none; display:flex; flex-direction:column; animation-delay:{delay}s; height:320px;">
+            <!-- Gradient Header -->
+            <div style="height:140px; background:{gradient}; position:relative; display:flex; align-items:flex-end; padding:1.5rem;">
+                <div style="font-size:3rem; opacity:0.2; position:absolute; top:10px; right:15px; font-weight:900; color:white;">0{i+1}</div>
+            </div>
+            
+            <!-- Content -->
+            <div style="padding:1.5rem; flex:1; display:flex; flex-direction:column; background:var(--card-bg);">
+                <h3 style="font-family:'Fredoka'; font-size:1.4rem; margin-bottom:0.5rem; line-height:1.2;">{project['title']}</h3>
+                <p style="font-size:0.9rem; color:var(--text-dim); margin-bottom:1rem; flex:1; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">
+                    {project.get('desc', 'Innovative solution leveraging advanced algorithms and modern tech stacks.')}
+                </p>
+                
+                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:1rem;">
+                    {tags_html}
+                </div>
+                
+                <a href="#" style="font-size:0.85rem; color:var(--accent); font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:5px;">
+                    View Project <span style="font-size:1rem;">&rarr;</span>
+                </a>
+            </div>
+        </div>
+        """
     
     return f"""
     <div id="view-projects" class="view-section">
-        <!-- Scoped Particle Background -->
-        <canvas id="particles-js"></canvas>
-
-        <div class="cyber-grid">
-            <!-- 1. HEADER CELL (Span 2x2) -->
-            <div class="cyber-card span-2 span-2-vert">
-                <div class="cyber-label">------ ABOUT</div>
-                <h1 class="cyber-title">Creative Developer</h1>
-                <p class="cyber-desc">
-                    Crafting digital experiences at the intersection of AI, design, and technology.
-                    <br><br>
-                    <span class="cyber-accent">#001</span> SYSTEM ONLINE
-                </p>
-                <div class="wireframe-globe"></div>
+        <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:2rem; max-width:1200px; margin: 0 auto;">
+             <div style="grid-column: 1/-1; text-align:center; margin-bottom:1rem; padding-top:1rem;">
+                <div style="font-family:'Fredoka'; color:var(--accent); font-size:1rem; letter-spacing:1px; margin-bottom:0.5rem;">PORTFOLIO</div>
+                <h2 style="font-family:'Fredoka'; font-size:2.5rem; color:var(--text);">Innovation <span style="color:var(--accent)">Gallery</span></h2>
+                <p style="color:var(--text-dim); margin-top:0.5rem;">A collection of my work in AI, Data Science, and Development.</p>
             </div>
-
-            <!-- 2. STATS CELLS -->
-            <div class="cyber-card">
-                <div class="cyber-label">STATUS: ACTIVE</div>
-                <div class="cyber-title" style="color:var(--accent-2)">50+</div>
-                <div class="cyber-label">Projects</div>
-            </div>
-            <div class="cyber-card">
-                <div class="cyber-label">EXP</div>
-                <div class="cyber-title" style="color:var(--accent-2)">{STATS['hours']}</div>
-                <div class="cyber-label">Years</div>
-            </div>
-
-            <!-- 3. SYNCPOINT WIDGET -->
-            <div class="cyber-card">
-                <div class="cyber-label">SYNCPOINT</div>
-                <div class="cyber-title">2026</div>
-                <div style="margin-top:auto; border-radius:50%; width:40px; height:40px; border:2px solid #00FF88; display:flex; align-items:center; justify-content:center; font-size:0.7rem; color:#00FF88;">75%</div>
-            </div>
-
-            <!-- 4. PROJECT 1 (Main Feature) -->
-            <div class="cyber-card span-2-vert">
-                <div class="cyber-label">PROJECT.01</div>
-                <h2 class="cyber-title">{p(0)['title']}</h2>
-                <p class="cyber-desc">AI-driven analysis for strategic decision making.</p>
-                <div style="margin-top:auto;">
-                    <div class="cyber-label">STACK</div>
-                    <div class="p-tag-row">
-                        {' '.join([f'<span class="cyber-btn" style="font-size:0.6rem; padding:4px 8px;">{t}</span>' for t in p(0)['tags']])}
-                    </div>
-                </div>
-            </div>
-
-            <!-- 5. TECH STACK WIDGET -->
-            <div class="cyber-card span-2">
-                <div class="cyber-label">CORE SKILLS</div>
-                <h3 class="cyber-title" style="font-size:1.4rem;">Tech Stack</h3>
-                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:1rem;">
-                    <span class="cyber-btn">Python</span>
-                    <span class="cyber-btn">TensorFlow</span>
-                    <span class="cyber-btn">PyTorch</span>
-                    <span class="cyber-btn">React</span>
-                    <span class="cyber-btn">Streamlit</span>
-                </div>
-            </div>
-
-            <!-- 6. GRID SYNC DECORATION -->
-            <div class="cyber-card">
-                <div class="cyber-label">HEXAFORGE</div>
-                <div class="cyber-title">Grid Sync</div>
-                <div class="cyber-label">8.9902 / 33.7</div>
-            </div>
-
-            <!-- 7. ENERGY WAVE WIDGET (Span 2) -->
-            <div class="cyber-card span-2">
-                <div style="display:flex; justify-content:space-between;">
-                    <div class="cyber-label">SYS-01 RESET</div>
-                    <div class="cyber-mono">100%</div>
-                </div>
-                <h3 class="cyber-title" style="font-size:1.4rem;">Energy Wave</h3>
-                <div class="energy-bar"><div class="energy-fill" style="--w:80%"></div></div>
-                <div class="energy-bar"><div class="energy-fill" style="--w:60%"></div></div>
-                <div class="energy-bar"><div class="energy-fill" style="--w:90%"></div></div>
-            </div>
-
-            <!-- 8. PROJECT 2 (Tall) -->
-            <div class="cyber-card">
-                <div class="cyber-label">SEKTOR</div>
-                <h2 class="cyber-title" style="font-size:1.2rem;">{p(1)['title']}</h2>
-                <div class="wireframe-globe" style="width:60px; height:60px; right:10px; bottom:10px;"></div>
-            </div>
-
-            <!-- 9. PROJECT 3 -->
-            <div class="cyber-card span-2 span-2-vert">
-                <div class="cyber-label">PROTOCOL</div>
-                <h2 class="cyber-title">{p(2)['title']}</h2>
-                <p class="cyber-desc">Advanced data structures and prediction algorithms.</p>
-                <div style="margin-top:auto; text-align:right;">
-                    <div class="cyber-title" style="font-size:3rem; color:#222;">#777</div>
-                </div>
-            </div>
-
-             <!-- 10. CORE BRUTALIA WIDGET (Footer) -->
-            <div class="cyber-card span-2">
-                <div style="display:flex; align-items:center; gap:1rem;">
-                    <div style="font-size:2rem;">🌐</div>
-                    <div>
-                        <div class="cyber-title" style="font-size:1.2rem;">Core Brutalia</div>
-                        <div class="cyber-label">{STATS['status']}</div>
-                    </div>
-                    <div style="margin-left:auto; font-size:1.5rem; font-weight:700;">64%</div>
-                </div>
-                <div class="energy-bar" style="margin-top:1rem;"><div class="energy-fill" style="--w:64%"></div></div>
-            </div>
-            
-        </div>
-        
-        <div style="text-align:center; margin-top:3rem;">
-            <button onclick="switchView('main')" class="cyber-btn" style="padding:12px 24px;">Return to Main System</button>
+            {cards_html}
         </div>
     </div>
     """
@@ -295,18 +223,75 @@ def get_education_view_html() -> str:
 
     return f"""
     <div id="view-education" class="view-section">
+        <!-- Scripts: Vanilla Tilt + Canvas Confetti -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+        <script type="text/javascript">
+            // 1. Initialize Tilt
+            const initEducationTilt = () => {{
+                VanillaTilt.init(document.querySelectorAll(".tilt-card"), {{
+                    max: 5, speed: 400, glare: true, "max-glare": 0.2
+                }});
+            }};
+
+            // 2. Spotlight Effect (Mouse Tracking)
+            const initEducationSpotlight = () => {{
+                const cards = document.querySelectorAll(".spotlight-card");
+                cards.forEach(card => {{
+                    card.addEventListener("mousemove", (e) => {{
+                        const rect = card.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        card.style.setProperty("--x", `${{x}}px`);
+                        card.style.setProperty("--y", `${{y}}px`);
+                    }});
+                }});
+            }};
+
+            // 3. Confetti Trigger
+            const triggerConfetti = () => {{
+                var duration = 3 * 1000;
+                var animationEnd = Date.now() + duration;
+                var defaults = {{ startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 }};
+
+                function random(min, max) {{ return Math.random() * (max - min) + min; }}
+
+                var interval = setInterval(function() {{
+                    var timeLeft = animationEnd - Date.now();
+                    if (timeLeft <= 0) {{ return clearInterval(interval); }}
+                    var particleCount = 50 * (timeLeft / duration);
+                    // multiple origins
+                    confetti(Object.assign({{}}, defaults, {{ particleCount, origin: {{ x: random(0.1, 0.3), y: Math.random() - 0.2 }} }}));
+                    confetti(Object.assign({{}}, defaults, {{ particleCount, origin: {{ x: random(0.7, 0.9), y: Math.random() - 0.2 }} }}));
+                }}, 250);
+            }};
+
+            // Run Init
+            setTimeout(() => {{
+                initEducationTilt();
+                initEducationSpotlight();
+                
+                // Attach click to Growth Card
+                const growthCard = document.getElementById("growth-card");
+                if(growthCard) {{
+                    growthCard.addEventListener("click", triggerConfetti);
+                }}
+            }}, 100);
+        </script>
+
         <div class="dashboard-grid" style="grid-template-rows: repeat(auto-fit, minmax(200px, 1fr)); gap:1.2rem;">
             
-            <!-- 1. HEADER / TITLE CELL -->
-            <div class="card" style="display:flex; flex-direction:column; justify-content:center; padding:2rem;">
+            <!-- 1. HEADER -->
+            <div class="card spotlight-card anim-stagger" style="display:flex; flex-direction:column; justify-content:center; padding:2rem; animation-delay: 0.1s;">
                 <div style="font-family:'Fredoka'; color:var(--accent); font-size:1rem; letter-spacing:1px;">ACADEMIC</div>
                 <h2 style="font-family:'Fredoka'; font-size:2rem; line-height:1.1;">Educational<br>Journey</h2>
                 <div style="margin-top:1rem; font-size:0.9rem; color:var(--text-dim);">Foundations of my technical expertise.</div>
             </div>
 
-            <!-- 2. MAIN DEGREE (B.Tech) - Spans 2 cols, 2 rows -->
-            <div class="card span-2" style="background:#fff; position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-start;">
-                <div style="position:absolute; top:2rem; right:2rem; display:flex; gap:10px;">
+            <!-- 2. MAIN DEGREE (B.Tech) -->
+            <div class="card span-2 tilt-card spotlight-card anim-stagger" data-tilt style="position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-start; animation-delay: 0.2s;">
+                <div style="position:absolute; top:2rem; right:2rem; display:flex; gap:10px; z-index:3;">
                     <div style="background:var(--bg); padding:8px; border-radius:12px; border:1px solid var(--border);">
                         <img src="{img_to_bytes(e(0).get('logo', ''))}" style="width:60px; height:60px; object-fit:contain;">
                     </div>
@@ -317,32 +302,34 @@ def get_education_view_html() -> str:
                     ''' if e(0).get('logo_secondary') else ''}
                 </div>
                 
-                <div style="margin-top:0;">
+                <div style="margin-top:0; z-index:3;">
                     <div class="skill-tag core" style="margin:0 0 1rem 0;">{e(0)['duration']}</div>
                     <h3 style="font-family:'Fredoka'; font-size:1.8rem; margin-bottom:0.5rem; line-height:1.2;">{e(0)['degree']}</h3>
                     <div style="font-size:1.1rem; color:var(--text); font-weight:600; margin-bottom:0.2rem;">{e(0)['institution']}</div>
                     <div style="font-size:0.9rem; color:var(--text-dim); margin-bottom:1rem;">{e(0)['university']}</div>
                     
-                     <p style="font-size:0.95rem; line-height:1.6; color:#555; max-width:85%; margin-top:1.5rem;">
+                     <p style="font-size:0.95rem; line-height:1.6; color:var(--text-dim); max-width:85%; margin-top:1.5rem;">
                         {e(0)['desc']}
                     </p>
                 </div>
 
-                <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px dashed var(--border); display:flex; gap:2rem; flex-wrap:wrap;">
-                     <div>
+                <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px dashed var(--border); display:flex; gap:2rem; flex-wrap:wrap; z-index:3;">
+                     <div style="min-width:120px;">
                         <div style="font-size:0.75rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Percentage</div>
                         <div style="font-family:'JetBrains Mono'; font-size:1.2rem; font-weight:700; color:var(--accent);">{e(0)['grade']}</div>
+                        <div class="grade-bar-container"><div class="grade-bar-fill" style="background:var(--accent); --percent: 68%;"></div></div>
                      </div>
-                     <div>
+                     <div style="min-width:150px;">
                         <div style="font-size:0.75rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Academic Performance</div>
                         <div style="font-family:'JetBrains Mono'; font-size:1.1rem; font-weight:600; color:var(--accent-3);">{e(0)['cgpa']}</div>
+                         <div class="grade-bar-container"><div class="grade-bar-fill" style="background:var(--accent-3); --percent: 92%;"></div></div>
                      </div>
                 </div>
             </div>
 
-            <!-- 3. GROWTH WIDGET -->
-            <div class="card" style="display:flex; align-items:center; justify-content:center; background:var(--accent); color:white; border:none;">
-                <div style="text-align:center;">
+            <!-- 3. GROWTH WIDGET (Clickable Confetti) -->
+            <div id="growth-card" class="card tilt-card spotlight-card anim-stagger confetti-trigger" data-tilt style="display:flex; align-items:center; justify-content:center; background:var(--accent); color:white; border:none; animation-delay: 0.3s;">
+                <div style="text-align:center; pointer-events:none;">
                     <div style="font-size:3.5rem; font-weight:700;">4</div>
                     <div style="font-family:'JetBrains Mono'; opacity:0.9; font-size:1.2rem;">Years</div>
                     <div style="font-size:0.9rem; margin-top:0.5rem; opacity:0.9;">Engineering Excellence</div>
@@ -350,8 +337,8 @@ def get_education_view_html() -> str:
             </div>
 
             <!-- 4. 12th Grade -->
-            <div class="card span-2" style="display:flex; flex-direction:column; justify-content:space-between;">
-                <div style="display:flex; justify-content:space-between; align-items:start;">
+            <div class="card span-2 tilt-card spotlight-card anim-stagger" data-tilt style="display:flex; flex-direction:column; justify-content:space-between; animation-delay: 0.4s;">
+                <div style="display:flex; justify-content:space-between; align-items:start; z-index:3;">
                     <div>
                          <span class="skill-tag" style="margin-bottom:0.8rem;">{e(1)['duration']}</span>
                          <h4 style="font-family:'Fredoka'; font-size:1.4rem; margin-bottom:0.5rem;">{e(1)['degree']}</h4>
@@ -361,26 +348,27 @@ def get_education_view_html() -> str:
                     <img src="{img_to_bytes(e(1).get('logo', ''))}" style="width:50px; height:50px; object-fit:contain; border-radius:8px;">
                 </div>
                 
-                 <p style="font-size:0.9rem; line-height:1.5; color:#666; margin:1.5rem 0;">
+                 <p style="font-size:0.9rem; line-height:1.5; color:var(--text-dim); margin:1.5rem 0; z-index:3;">
                     {e(1)['desc']}
                 </p>
 
-                <div style="margin-top:auto; padding-top:1rem; border-top:1px solid #f0f0f0;">
+                <div style="margin-top:auto; padding-top:1rem; border-top:1px solid var(--border); z-index:3;">
                     <span style="font-size:0.8rem; color:var(--text-dim); margin-right:8px;">Score:</span>
                     <span style="font-family:'JetBrains Mono'; font-weight:700; color:var(--accent-3); font-size:1.1rem;">{e(1)['grade']}</span>
+                     <div class="grade-bar-container"><div class="grade-bar-fill" style="background:var(--accent-3); --percent: 75%;"></div></div>
                 </div>
             </div>
 
-            <!-- 5. QUOTE / DECORATION (Swapped position) -->
-            <div class="card" style="background:#F0F0F0; border:none; display:flex; align-items:center; justify-content:center; text-align:center; padding:2rem;">
-                <div style="font-family:'Playfair Display', serif; font-style:italic; font-size:1.1rem; color:#666;">
+            <!-- 5. QUOTE -->
+            <div class="card spotlight-card anim-stagger" style="background:var(--bg-secondary); border:none; display:flex; align-items:center; justify-content:center; text-align:center; padding:2rem; animation-delay: 0.5s;">
+                <div style="font-family:'Playfair Display', serif; font-style:italic; font-size:1.1rem; color:var(--text-dim); z-index:3;">
                     "Learning is not attained by chance, it must be sought for with ardor and attended to with diligence."
                 </div>
             </div>
 
             <!-- 6. 10th Grade -->
-            <div class="card span-2" style="display:flex; flex-direction:column; justify-content:space-between;">
-               <div style="display:flex; justify-content:space-between; align-items:start;">
+            <div class="card span-2 tilt-card spotlight-card anim-stagger" data-tilt style="display:flex; flex-direction:column; justify-content:space-between; animation-delay: 0.6s;">
+               <div style="display:flex; justify-content:space-between; align-items:start; z-index:3;">
                     <div>
                          <span class="skill-tag" style="margin-bottom:0.8rem;">{e(2)['duration']}</span>
                          <h4 style="font-family:'Fredoka'; font-size:1.4rem; margin-bottom:0.5rem;">{e(2)['degree']}</h4>
@@ -390,13 +378,14 @@ def get_education_view_html() -> str:
                     <img src="{img_to_bytes(e(2).get('logo', ''))}" style="width:50px; height:50px; object-fit:contain; border-radius:8px;">
                 </div>
                 
-                 <p style="font-size:0.9rem; line-height:1.5; color:#666; margin:1.5rem 0;">
+                 <p style="font-size:0.9rem; line-height:1.5; color:var(--text-dim); margin:1.5rem 0; z-index:3;">
                     {e(2)['desc']}
                 </p>
 
-                <div style="margin-top:auto; padding-top:1rem; border-top:1px solid #f0f0f0;">
+                <div style="margin-top:auto; padding-top:1rem; border-top:1px solid var(--border); z-index:3;">
                     <span style="font-size:0.8rem; color:var(--text-dim); margin-right:8px;">GPA:</span>
                     <span style="font-family:'JetBrains Mono'; font-weight:700; color:var(--accent-3); font-size:1.1rem;">{e(2)['grade']}</span>
+                     <div class="grade-bar-container"><div class="grade-bar-fill" style="background:var(--orange, #FF9F1C); --percent: 88%;"></div></div>
                 </div>
             </div>
 
@@ -404,68 +393,164 @@ def get_education_view_html() -> str:
     </div>
     """
 
-def get_skills_detailed_view_html() -> str:
-    """Generates the Detailed Skills view."""
-    # Group skills for display
-    categories = {
-        "AI & LLMs": ["Generative AI", "LLMs & NLP", "RAG Systems", "Prompt Eng."],
-        "Development": ["Python", "MLOps", "SQL/NoSQL", "Data Science"]
-    }
-    
-    html = ""
-    for cat, items in categories.items():
-        tags = "".join([f'<span class="skill-tag" style="font-size:1rem; padding:10px 20px;">{item}</span>' for item in items])
-        html += f"""
-        <div class="card" style="margin-bottom:1.5rem;">
-            <div style="font-family:'Fredoka'; font-size:1.4rem; margin-bottom:1rem; color:var(--text);">{cat}</div>
-            <div style="display:flex; flex-wrap:wrap; gap:15px;">
-                {
-                    "".join([f'''
-                    <div style="display:flex; align-items:center; gap:8px; background:var(--bg); padding:8px 16px; border-radius:30px; border:1px solid var(--border);">
-                        <img src="{img_to_bytes(LOGOS.get(item.split()[0], LOGOS.get(item, '')))}" style="width:20px; height:20px; object-fit:contain;" onerror="this.style.display='none'">
-                        <span style="font-weight:600; font-size:0.9rem;">{item}</span>
-                    </div>
-                    ''' for item in items])
-                }
+def get_experience_view_html() -> str:
+    """Generates the Work Experience view."""
+    exp_html = ""
+    for i, job in enumerate(EXPERIENCE):
+        delay = 0.1 + (i * 0.1)
+        
+        details_html = "".join([f'<li style="margin-bottom:0.5rem;">{d}</li>' for d in job['details']])
+        
+        logo_tag = f'<img src="{img_to_bytes(job.get("logo", ""))}" style="width:50px; height:50px; object-fit:contain; border-radius:8px; margin-bottom:1rem;">' if job.get('logo') else ''
+
+        exp_html += f"""
+        <div class="card tilt-card spotlight-card anim-stagger" data-tilt style="margin-bottom:2rem; animation-delay:{delay}s; padding:2rem; border-left:4px solid var(--accent);">
+            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; align-items:flex-start; margin-bottom:1rem;">
+                <div style="flex:1;">
+                    {logo_tag}
+                    <h3 style="font-family:'Fredoka'; font-size:1.5rem; margin-bottom:0.2rem;">{job['role']}</h3>
+                    <div style="font-size:1rem; color:var(--accent); font-weight:600; margin-bottom:0.5rem;">{job['company']} <span style="color:var(--text-dim); font-weight:400;">| {job['location']}</span></div>
+                </div>
+                <div class="cyber-label" style="font-size:0.9rem; margin-top:0.5rem;">{job['date']}</div>
             </div>
+            
+            <p style="font-style:italic; color:var(--text-dim); margin-bottom:1.5rem; border-bottom:1px solid var(--border); padding-bottom:1rem;">
+                "{job['desc']}"
+            </p>
+
+            <ul style="padding-left:1.5rem; color:var(--text); line-height:1.6; font-size:0.95rem;">
+                {details_html}
+            </ul>
         </div>
         """
 
     return f"""
-    <div id="view-skills" class="view-section">
-        <div class="dashboard-grid" style="grid-template-columns: 1fr; max-width:800px;">
-             <div style="text-align:center; margin-bottom:2rem;">
-                <h2 class="intro-title">Technical <span style="color:var(--accent)">Arsenal</span></h2>
-                <p class="intro-sub">Tools and technologies I work with.</p>
+    <div id="view-experience" class="view-section">
+        <div class="dashboard-grid" style="grid-template-columns: 1fr; max-width:900px; margin:0 auto;">
+            <div style="text-align:center; margin-bottom:2rem;">
+                <h2 class="intro-title">Professional <span style="color:var(--accent)">Experience</span></h2>
+                 <p class="intro-sub">My career journey and contributions.</p>
             </div>
-            {html}
+            {exp_html}
+        </div>
+    </div>
+    """
+
+def get_skills_detailed_view_html() -> str:
+    """Generates the 'Tech Arsenal' grid view."""
+    
+    # Categories Definition
+    tech_stacks = {
+        "AI & Generative Tech": ["Generative AI", "LLM", "NLP", "RAG"],
+        "Data Science & ML": ["Python", "Data Science", "ML", "DL"],
+        "Tools & Platforms": ["MySQL", "PowerBI", "Excel"]
+    }
+
+    stack_html = ""
+    total_delay = 0.1
+
+    for category, skills in tech_stacks.items():
+        stack_html += f"""
+        <div style="grid-column: 1/-1; margin-top:2rem; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">
+            <h3 style="font-family:'Fredoka'; font-size:1.5rem; color:var(--text);">{category}</h3>
+        </div>
+        """
+        
+        cards_html = ""
+        for skill_name in skills:
+            # Match logo from LOGOS config or try generic
+            logo_key = skill_name
+            # Handle mapping variations if needed (e.g. "Generative AI" -> no specific logo in config? Use logic)
+            # Checking config LOGOS keys: 'Generative AI' not there. 'LLM' is there.
+            # I'll use a safe get.
+            logo_path = LOGOS.get(skill_name, LOGOS.get(skill_name.split()[0], "")) # Try full name, then first word
+            
+            # Fallback for 'Generative AI' if not found - maybe use AI Variant logo or generic?
+            # Let's assume 'AI_logo.jpg' for Generative AI if not found? 
+            # Or just don't show image if missing.
+            
+            img_tag = f'<img src="{img_to_bytes(logo_path)}" style="width:40px; height:40px; object-fit:contain; margin-bottom:1rem;">' if logo_path else '<div style="width:40px; height:40px; margin-bottom:1rem;">🤖</div>'
+
+            cards_html += f"""
+            <div class="card tilt-card spotlight-card anim-stagger" data-tilt style="padding:1.5rem; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; animation-delay:{total_delay}s;">
+                {img_tag}
+                <div style="font-weight:700; font-size:1rem; margin-bottom:0.5rem;">{skill_name}</div>
+                <div class="grade-bar-container" style="width:100%; height:6px; margin-top:0.5rem;">
+                    <div class="grade-bar-fill" style="width:85%;"></div>
+                </div>
+            </div>
+            """
+            total_delay += 0.05
+        
+        stack_html += cards_html
+
+    return f"""
+    <div id="view-skills" class="view-section">
+        <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:1.5rem; max-width:1000px; margin: 0 auto;">
+             <div style="grid-column: 1/-1; text-align:center; margin-bottom:1rem;">
+                <h2 class="intro-title">Technical <span style="color:var(--accent)">Arsenal</span></h2>
+                <p class="intro-sub">The tools and technologies I leverage to build intelligence.</p>
+            </div>
+            {stack_html}
         </div>
     </div>
     """
 
 def get_certifications_view_html() -> str:
-    """Generates the Certifications grid view."""
+    """Generates the Certifications grid view with 'Credential Vault' design."""
     cert_html = ""
-    for c in CERTIFICATIONS:
+    # Add delay base
+    for i, c in enumerate(CERTIFICATIONS):
+        delay = 0.1 + (i * 0.1)
+        
+        # Logo Logic (with fallback)
+        logo_src = c.get('logo', '')
+        logo_img_tag = f'<img src="{img_to_bytes(logo_src)}" style="width:40px; height:40px; object-fit:contain;">' if logo_src else ''
+
         cert_html += f"""
-        <div class="card cert-card" style="padding:0; overflow:hidden; border:none; height:300px; display:flex; flex-direction:column;">
-            <div style="height:160px; overflow:hidden; background:#eee; display:flex; align-items:center; justify-content:center;">
-                <img src="{img_to_bytes(c['image'])}" style="width:100%; height:100%; object-fit:cover; transition:transform 0.5s ease;" class="cert-img">
+        <div class="card cert-card tilt-card spotlight-card anim-stagger" data-tilt style="padding:0; overflow:hidden; border:none; height:420px; display:flex; flex-direction:column; animation-delay: {delay}s; background: white;">
+            
+            <!-- Image Header -->
+            <div style="height:250px; overflow:hidden; position:relative; background:var(--bg-secondary);">
+                <img src="{img_to_bytes(c['image'])}" style="width:100%; height:100%; object-fit:contain; transition:transform 0.5s ease;" class="cert-img">
+                
+                <!-- Verified Badge -->
+                <div style="position:absolute; top:12px; right:12px; background:var(--card-bg); padding:4px 10px; border-radius:20px; font-size:0.75rem; font-weight:700; color:var(--accent-2); display:flex; align-items:center; gap:5px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+                    <span style="font-size:1rem;">✓</span> Verified
+                </div>
             </div>
-            <div style="padding:1.2rem; flex:1; display:flex; flex-direction:column;">
-                <div class="cyber-label" style="color:var(--accent-2)">{c['date']}</div>
-                <h3 style="font-family:'Fredoka'; font-size:1.1rem; margin:0.5rem 0;">{c['title']}</h3>
-                <div style="font-size:0.85rem; color:var(--text-dim);">{c['issuer']}</div>
-                <a href="{c['image']}" target="_blank" style="margin-top:auto; font-size:0.8rem; text-decoration:none; color:var(--accent); font-weight:600;">View Credential &rarr;</a>
+
+            <!-- Content Body -->
+            <div style="padding:1.5rem; flex:1; display:flex; flex-direction:column; position:relative;">
+                
+                <!-- Floating Logo (Overlaps Header) -->
+                <div style="position:absolute; top:-25px; left:1.5rem; background:var(--card-bg); width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(0,0,0,0.08); border:1px solid var(--border);">
+                    {img_to_bytes(c.get('logo', '')) and f'<img src="{img_to_bytes(c.get("logo"))}" style="width:32px; height:32px; object-fit:contain;">'}
+                </div>
+
+                <div style="margin-top:1.5rem;">
+                     <div class="cyber-label" style="color:var(--text-dim); margin-bottom:5px; font-size:0.8rem;">{c['date']}</div>
+                     <h3 style="font-family:'Fredoka'; font-size:1.3rem; margin:0 0 0.5rem 0; line-height:1.3;">{c['title']}</h3>
+                     <div style="font-size:0.95rem; color:var(--text-dim); font-weight:500;">{c['issuer']}</div>
+                </div>
+
+                <!-- Actions Footer -->
+                <div style="margin-top:auto; padding-top:1rem; display:flex; gap:15px; align-items:center;">
+                    <a href="{img_to_bytes(c['image'])}" download="{c['title']}.jpg" style="font-size:0.9rem; text-decoration:none; color:var(--text); font-weight:600; display:flex; align-items:center; gap:5px; opacity:0.7; hover:opacity:1;">
+                        <span>⬇</span> Download
+                    </a>
+                </div>
             </div>
         </div>
         """
         
     return f"""
     <div id="view-certifications" class="view-section">
-        <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:1.5rem;">
-            <div style="grid-column: 1/-1; text-align:center; margin-bottom:2rem;">
-                <h2 class="intro-title">Professional <span style="color:var(--accent)">Certifications</span></h2>
+        <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap:2rem; max-width: 1400px; margin: 0 auto;">
+            <div style="grid-column: 1/-1; text-align:center; margin-bottom:1rem; padding-top:1rem;">
+                <div style="font-family:'Fredoka'; color:var(--accent); font-size:1rem; letter-spacing:1px; margin-bottom:0.5rem;">ACHIEVEMENTS</div>
+                <h2 style="font-family:'Fredoka'; font-size:2.5rem; color:var(--text);">Credential <span style="color:var(--accent)">Vault</span></h2>
+                <p style="color:var(--text-dim); margin-top:0.5rem;">Verified technical competencies and specializations.</p>
             </div>
             {cert_html}
         </div>

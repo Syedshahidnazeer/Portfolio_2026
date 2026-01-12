@@ -11,14 +11,17 @@ from config import PROFILE
 from utils import load_css, load_js
 from components.html_templates import (
     get_navbar_html, get_main_dashboard_html, get_projects_view_html,
-    get_education_view_html, get_skills_detailed_view_html,
-    get_certifications_view_html, get_contact_view_html
+    get_education_view_html, get_experience_view_html, get_skills_detailed_view_html,
+    get_certifications_view_html, get_contact_view_html)
 
 
 
 
 
-)
+
+
+
+
 
 def main() -> None:
     """
@@ -68,6 +71,7 @@ def main() -> None:
     css_content = load_css("styles/main.css")
     js_script = load_js("scripts/mascot.js")
     particles_script = load_js("scripts/particles.js")
+    theme_script = load_js("scripts/theme.js")
 
     # 3. HTML Assembly
     app_html = f"""
@@ -90,14 +94,17 @@ def main() -> None:
         <!-- Main Dashboard View -->
         {get_main_dashboard_html()}
         
-        <!-- Projects View -->
-        {get_projects_view_html()}
-
         <!-- Education View -->
         {get_education_view_html()}
 
+        <!-- Experience View -->
+        {get_experience_view_html()}
+
         <!-- Skills View -->
         {get_skills_detailed_view_html()}
+
+        <!-- Projects/Work View -->
+        {get_projects_view_html()}
 
         <!-- Certifications View -->
         {get_certifications_view_html()}
@@ -107,6 +114,7 @@ def main() -> None:
         
         <!-- JS Injection -->
         <script>
+            {theme_script}
             {js_script}
             {particles_script}
         </script>
