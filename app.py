@@ -102,7 +102,7 @@ def main() -> None:
 
     # 4. Render Application
     # Using height=1000 and scrolling=True to ensure full viewport usage
-    components.html(app_html, height=1000, scrolling=True)
+    components.html(app_html, height=700, scrolling=True)
 
 if __name__ == "__main__":
     main()
