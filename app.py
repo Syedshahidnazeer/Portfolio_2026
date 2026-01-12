@@ -86,7 +86,6 @@ def main() -> None:
         {get_main_dashboard_html()}
         
         <!-- Projects View -->
-        <!-- Projects View -->
         {get_projects_view_html()}
 
         <!-- Education View -->
