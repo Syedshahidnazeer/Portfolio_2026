@@ -51,6 +51,57 @@ PROJECTS = [
     }
 ]
 
+EDUCATION = [
+    {
+        "degree": "Bachelor of Technology (B.Tech)",
+        "field": "Computer Science & Engineering",
+        "institution": "Annamacharya Institute Of Technology & Sciences, Kadapa",
+        "duration": "2018 - 2022",
+        "grade": "67.98%"
+    },
+    {
+        "degree": "Higher Secondary Education (12th)",
+        "field": "PCM (Physics, Chemistry, Maths)",
+        "institution": "Sri Chaitanya Junior College, Kadapa",
+        "duration": "Completed 2018",
+        "grade": "74.8%"
+    },
+    {
+        "degree": "Secondary Education (10th)",
+        "field": "General",
+        "institution": "Nagarjuna Model School, Kadapa",
+        "duration": "Completed 2016",
+        "grade": "8.8 GPA"
+    }
+]
+
+CERTIFICATIONS = [
+    {
+        "title": "Data Science Certification",
+        "issuer": "Excelr",
+        "date": "Jan 2023",
+        "desc": "Machine Learning, Python, Data Viz"
+    },
+    {
+        "title": "Business Analytics",
+        "issuer": "Internshala",
+        "date": "Nov 2022",
+        "desc": "Data Analysis, Statistical Models"
+    },
+    {
+        "title": "AWS Cloud Practitioner",
+        "issuer": "Amazon Web Services",
+        "date": "Nov 2022",
+        "desc": "Cloud Fundamentals & Services"
+    },
+    {
+        "title": "Google Data Analytics",
+        "issuer": "Google",
+        "date": "Nov 2022",
+        "desc": "Data Analysis Professional Cert"
+    }
+]
+
 STATS = {
     "hours": "2+ Yrs",
     "projects": "3+ Major",

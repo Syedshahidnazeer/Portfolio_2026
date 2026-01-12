@@ -10,9 +10,9 @@ import streamlit.components.v1 as components
 from config import PROFILE
 from utils import load_css, load_js
 from components.html_templates import (
-    get_navbar_html, 
-    get_main_dashboard_html,
-    get_projects_view_html
+    get_navbar_html, get_main_dashboard_html, get_projects_view_html,
+    get_education_view_html, get_skills_detailed_view_html,
+    get_certifications_view_html, get_contact_view_html
 )
 
 def main() -> None:
@@ -86,7 +86,20 @@ def main() -> None:
         {get_main_dashboard_html()}
         
         <!-- Projects View -->
+        <!-- Projects View -->
         {get_projects_view_html()}
+
+        <!-- Education View -->
+        {get_education_view_html()}
+
+        <!-- Skills View -->
+        {get_skills_detailed_view_html()}
+
+        <!-- Certifications View -->
+        {get_certifications_view_html()}
+
+        <!-- Contact View -->
+        {get_contact_view_html()}
         
         <!-- JS Injection -->
         <script>

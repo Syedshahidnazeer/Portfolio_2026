@@ -6,7 +6,7 @@ It decouples the logic from the main application file, ensuring better maintaina
 Data is pulled dynamically from `config.py`.
 """
 from typing import List, Dict, Any
-from config import PROFILE, SKILLS, PROJECTS, STATS
+from config import PROFILE, SKILLS, PROJECTS, STATS, EDUCATION, CERTIFICATIONS
 
 def get_navbar_html() -> str:
     """Generates the sticky navigation bar HTML."""
@@ -15,7 +15,11 @@ def get_navbar_html() -> str:
         <div class="nav-brand">SHAHID<span style="color:var(--accent)">.dev</span></div>
         <div class="nav-pill">
             <a onclick="switchView('main')" id="link-main" class="nav-item active">Home</a>
+            <a onclick="switchView('education')" id="link-education" class="nav-item">Education</a>
+            <a onclick="switchView('skills')" id="link-skills" class="nav-item">Skills</a>
             <a onclick="switchView('projects')" id="link-projects" class="nav-item">Work</a>
+            <a onclick="switchView('certifications')" id="link-certifications" class="nav-item">Certifications</a>
+            <a onclick="switchView('contact')" id="link-contact" class="nav-item">Contact</a>
         </div>
         <div class="nav-status">
             <span style="color:#2EC4B6">●</span> {STATS['status'].upper()}
@@ -278,6 +282,117 @@ def get_main_dashboard_html() -> str:
                 {get_skills_card_html()}
                 {get_map_card_html()}
             </div>
+        </div>
+    </div>
+    """
+
+def get_education_view_html() -> str:
+    """Generates the Education timeline view."""
+    ed_html = ""
+    for ed in EDUCATION:
+        ed_html += f"""
+        <div class="cyber-card" style="margin-bottom:1rem; position:relative; overflow:hidden;">
+             <div class="cyber-label">{ed['duration']}</div>
+             <h3 class="cyber-title" style="font-size:1.4rem;">{ed['degree']}</h3>
+             <div style="color:var(--text-dim); font-size:0.9rem; margin-top:0.5rem;">{ed['institution']}</div>
+             <div style="margin-top:0.5rem; font-family:'JetBrains Mono'; font-size:0.8rem; color:var(--accent);">{ed['grade']}</div>
+             <div class="wireframe-globe" style="width:40px; height:40px; right:10px; opacity:0.1;"></div>
+        </div>
+        """
+    
+    return f"""
+    <div id="view-education" class="view-section">
+        <div class="dashboard-grid" style="grid-template-columns: 1fr; max-width:800px;">
+            <div style="text-align:center; margin-bottom:2rem;">
+                <h2 class="intro-title">Academic <span style="color:var(--accent)">Timeline</span></h2>
+                <p class="intro-sub">Foundations of my technical journey.</p>
+            </div>
+            {ed_html}
+        </div>
+    </div>
+    """
+
+def get_skills_detailed_view_html() -> str:
+    """Generates the Detailed Skills view."""
+    # Group skills for display
+    categories = {
+        "AI & LLMs": ["Generative AI", "LLMs & NLP", "RAG Systems", "Prompt Eng."],
+        "Development": ["Python", "MLOps", "SQL/NoSQL", "Data Science"]
+    }
+    
+    html = ""
+    for cat, items in categories.items():
+        tags = "".join([f'<span class="skill-tag" style="font-size:1rem; padding:10px 20px;">{item}</span>' for item in items])
+        html += f"""
+        <div class="card" style="margin-bottom:1.5rem;">
+            <div style="font-family:'Fredoka'; font-size:1.4rem; margin-bottom:1rem; color:var(--text);">{cat}</div>
+            <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                {tags}
+            </div>
+        </div>
+        """
+
+    return f"""
+    <div id="view-skills" class="view-section">
+        <div class="dashboard-grid" style="grid-template-columns: 1fr; max-width:800px;">
+             <div style="text-align:center; margin-bottom:2rem;">
+                <h2 class="intro-title">Technical <span style="color:var(--accent)">Arsenal</span></h2>
+                <p class="intro-sub">Tools and technologies I work with.</p>
+            </div>
+            {html}
+        </div>
+    </div>
+    """
+
+def get_certifications_view_html() -> str:
+    """Generates the Certifications grid view."""
+    cert_html = ""
+    for c in CERTIFICATIONS:
+        cert_html += f"""
+        <div class="card" style="position:relative; transition:transform 0.3s; cursor:default;">
+            <div class="cyber-label" style="color:var(--accent-2)">{c['date']}</div>
+            <h3 style="font-family:'Fredoka'; font-size:1.2rem; margin:0.5rem 0;">{c['title']}</h3>
+            <div style="font-size:0.9rem; color:var(--text-dim);">{c['issuer']}</div>
+            <div style="font-size:0.8rem; margin-top:0.8rem; opacity:0.8;">{c['desc']}</div>
+        </div>
+        """
+        
+    return f"""
+    <div id="view-certifications" class="view-section">
+        <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:1.5rem;">
+            <div style="grid-column: 1/-1; text-align:center; margin-bottom:2rem;">
+                <h2 class="intro-title">Professional <span style="color:var(--accent)">Certifications</span></h2>
+            </div>
+            {cert_html}
+        </div>
+    </div>
+    """
+
+def get_contact_view_html() -> str:
+    """Generates the Contact view."""
+    socials = PROFILE['socials']
+    return f"""
+    <div id="view-contact" class="view-section">
+        <div class="dashboard-grid" style="grid-template-columns: 1fr; max-width:600px; text-align:center;">
+             <div class="card" style="padding:3rem;">
+                <h2 class="intro-title">Let's <span style="color:var(--accent)">Connect</span></h2>
+                <p class="intro-sub" style="margin:1rem auto 2rem;">
+                    Always open to discussing new opportunities, collaborations, or just a chat about AI.
+                </p>
+                
+                <a href="mailto:{PROFILE['email']}" class="cta-btn" style="display:inline-block; text-decoration:none; margin-bottom:2rem;">
+                    {PROFILE['email']}
+                </a>
+                
+                <div style="display:flex; justify-content:center; gap:20px; font-size:1rem;">
+                    <a href="{socials['LinkedIn']}" target="_blank" class="nav-item">LinkedIn</a>
+                    <a href="{socials['GitHub']}" target="_blank" class="nav-item">GitHub</a>
+                </div>
+                
+                <div style="margin-top:3rem; font-size:0.8rem; color:var(--text-dim);">
+                    Location: {PROFILE['location']}
+                </div>
+             </div>
         </div>
     </div>
     """
