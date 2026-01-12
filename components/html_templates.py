@@ -7,6 +7,7 @@ Data is pulled dynamically from `config.py`.
 """
 from typing import List, Dict, Any
 from config import PROFILE, SKILLS, PROJECTS, STATS, EDUCATION, CERTIFICATIONS
+# Force Deploy Update
 
 def get_navbar_html() -> str:
     """Generates the sticky navigation bar HTML."""
