@@ -17,6 +17,32 @@ PROFILE = {
     "intro_text": "Driving innovation with Generative AI and scalable Intelligent Systems."
 }
 
+LOGOS = {
+    "Python": "logos/python_logo.png",
+    "NLP": "logos/NLP_logo.png",
+    "LLM": "logos/LLM_logo.jpg",
+    "RAG": "logos/RAG_logo.jpg",
+    "DL": "logos/DL_logo.png",
+    "ML": "logos/ML_logo.png",
+    "Data Science": "logos/DS_logo.jpg",
+    "MySQL": "logos/mysql_logo.png",
+    "PowerBI": "logos/powerbi_logo.png",
+    "Excel": "logos/excel_logo.png",
+    "JNTUA": "logos/jntua_logo.png",
+    "AITS": "logos/aits_logo.png",
+    "Sri Chaitanya": "logos/bie_ap_logo.png",
+    "School": "logos/bse_ap_logo.png",
+    "Rapyder": "logos/Rapyder_logo.png",
+    "AI Variant": "logos/Aivariant_logo.jpg"
+}
+
+RESUMES = {
+    "Data Science": "resumes/data_science_resume.pdf",
+    "Full Stack": "resumes/full_stack_resume.pdf",
+    "Business Analyst": "resumes/business_analyst_resume.pdf",
+    "General": "resumes/resume_25v6i.pdf"
+}
+
 SKILLS = [
     {"name": "Generative AI", "val": 95}, 
     {"name": "LLMs & NLP", "val": 95},
@@ -53,25 +79,33 @@ PROJECTS = [
 
 EDUCATION = [
     {
-        "degree": "Bachelor of Technology (B.Tech)",
-        "field": "Computer Science & Engineering",
+        "degree": "B.Tech - CSE",
         "institution": "Annamacharya Institute Of Technology & Sciences, Kadapa",
-        "duration": "2018 - 2022",
-        "grade": "67.98%"
+        "university": "Jawaharlal Nehru Technological University, Anantapur",
+        "duration": "August 2018 - August 2022",
+        "grade": "67.98%",
+        "cgpa": "6.98 | Final Semester SGPA: 9.18",
+        "desc": "During my undergraduate studies, I developed strong foundations in computer science and engineering principles, with a focus on software development, data structures, and algorithms.",
+        "logo": "logos/jntua_logo.png",
+        "logo_secondary": "logos/aits_logo.png"
     },
     {
-        "degree": "Higher Secondary Education (12th)",
-        "field": "PCM (Physics, Chemistry, Maths)",
+        "degree": "Higher Secondary - 12th Class (PCM)",
         "institution": "Sri Chaitanya Junior College, Kadapa",
-        "duration": "Completed 2018",
-        "grade": "74.8%"
+        "board": "Board of Intermediate Education, Andhra Pradesh",
+        "duration": "April 2018",
+        "grade": "74.8%",
+        "desc": "In high school, I studied Physics, Chemistry, and Mathematics, which provided me with a strong analytical and problem-solving skill set.",
+        "logo": "logos/bie_ap_logo.png"
     },
     {
-        "degree": "Secondary Education (10th)",
-        "field": "General",
-        "institution": "Nagarjuna Model School, Kadapa",
-        "duration": "Completed 2016",
-        "grade": "8.8 GPA"
+        "degree": "Secondary - 10th Class",
+        "institution": "Nagarjuna Model School, Maruthinagar, Kadapa",
+        "board": "Board of Secondary Education, Andhra Pradesh",
+        "duration": "March 2016",
+        "grade": "8.8 GPA",
+        "desc": "In secondary school, I excelled in my studies, particularly in subjects like Mathematics and Science, which laid the groundwork for my future academic pursuits.",
+        "logo": "logos/bse_ap_logo.png"
     }
 ]
 
@@ -80,25 +114,29 @@ CERTIFICATIONS = [
         "title": "Data Science Certification",
         "issuer": "Excelr",
         "date": "Jan 2023",
-        "desc": "Machine Learning, Python, Data Viz"
+        "desc": "Machine Learning, Python, Data Viz",
+        "image": "Certifications/Excelr(Data Science)_Certification.jpg"
     },
     {
         "title": "Business Analytics",
         "issuer": "Internshala",
         "date": "Nov 2022",
-        "desc": "Data Analysis, Statistical Models"
+        "desc": "Data Analysis, Statistical Models",
+        "image": "Certifications/Internshala(Business Analytics)_Certification.jpg"
     },
     {
         "title": "AWS Cloud Practitioner",
         "issuer": "Amazon Web Services",
         "date": "Nov 2022",
-        "desc": "Cloud Fundamentals & Services"
+        "desc": "Cloud Fundamentals & Services",
+        "image": "logos/AI_logo.jpg" 
     },
     {
         "title": "Google Data Analytics",
         "issuer": "Google",
         "date": "Nov 2022",
-        "desc": "Data Analysis Professional Cert"
+        "desc": "Data Analysis Professional Cert",
+        "image": "logos/analytics_logo.png"
     }
 ]
 

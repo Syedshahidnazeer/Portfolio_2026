@@ -13,6 +13,11 @@ from components.html_templates import (
     get_navbar_html, get_main_dashboard_html, get_projects_view_html,
     get_education_view_html, get_skills_detailed_view_html,
     get_certifications_view_html, get_contact_view_html
+
+
+
+
+
 )
 
 def main() -> None:

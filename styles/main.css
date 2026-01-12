@@ -101,6 +101,54 @@ body {
     display: block;
 }
 
+/* RESUME HUB */
+.resume-chip {
+    padding: 10px 20px;
+    border-radius: 50px;
+    background: white;
+    border: 1px solid var(--border);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.resume-chip:hover {
+    background: var(--accent);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 159, 28, 0.3);
+    border-color: var(--accent);
+}
+
+/* CERTIFICATIONS POLISH */
+.cert-card:hover .cert-img {
+    transform: scale(1.05);
+}
+
+.cert-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* GENERAL UI POLISH */
+.card,
+.cyber-card {
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.skill-tag {
+    transition: all 0.2s ease;
+}
+
+.skill-tag:hover {
+    background: #fff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
+}
+
 /* DASHBOARD GRID (Desktop Default) */
 .dashboard-grid {
     padding: 1rem 3rem;
@@ -554,7 +602,7 @@ body {
     box-shadow: 0 0 30px rgba(0, 255, 136, 0.05);
 }
 
-/* Utility Classes for Grid Spans */
+/* Utility Classes for Grid Spans (Global) */
 .span-2 {
     grid-column: span 2;
 }
@@ -743,8 +791,8 @@ body {
     .span-2,
     .span-2-vert,
     .span-full {
-        grid-column: span 1;
-        grid-row: span 1;
+        grid-column: span 1 !important;
+        grid-row: span 1 !important;
     }
 
     .cyber-card {

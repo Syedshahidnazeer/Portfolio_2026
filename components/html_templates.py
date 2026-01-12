@@ -6,7 +6,8 @@ It decouples the logic from the main application file, ensuring better maintaina
 Data is pulled dynamically from `config.py`.
 """
 from typing import List, Dict, Any
-from config import PROFILE, SKILLS, PROJECTS, STATS, EDUCATION, CERTIFICATIONS
+from config import PROFILE, SKILLS, PROJECTS, STATS, EDUCATION, CERTIFICATIONS, LOGOS, RESUMES
+from utils import img_to_bytes
 # Force Deploy Update
 
 def get_navbar_html() -> str:
@@ -288,27 +289,117 @@ def get_main_dashboard_html() -> str:
     """
 
 def get_education_view_html() -> str:
-    """Generates the Education timeline view."""
-    ed_html = ""
-    for ed in EDUCATION:
-        ed_html += f"""
-        <div class="cyber-card" style="margin-bottom:1rem; position:relative; overflow:hidden;">
-             <div class="cyber-label">{ed['duration']}</div>
-             <h3 class="cyber-title" style="font-size:1.4rem;">{ed['degree']}</h3>
-             <div style="color:var(--text-dim); font-size:0.9rem; margin-top:0.5rem;">{ed['institution']}</div>
-             <div style="margin-top:0.5rem; font-family:'JetBrains Mono'; font-size:0.8rem; color:var(--accent);">{ed['grade']}</div>
-             <div class="wireframe-globe" style="width:40px; height:40px; right:10px; opacity:0.1;"></div>
-        </div>
-        """
-    
+    """Generates the Education view with a Bento Grid layout (Detailed Light Theme)."""
+    # Helper for safe access
+    def e(idx): return EDUCATION[idx] if idx < len(EDUCATION) else EDUCATION[0]
+
     return f"""
     <div id="view-education" class="view-section">
-        <div class="dashboard-grid" style="grid-template-columns: 1fr; max-width:800px;">
-            <div style="text-align:center; margin-bottom:2rem;">
-                <h2 class="intro-title">Academic <span style="color:var(--accent)">Timeline</span></h2>
-                <p class="intro-sub">Foundations of my technical journey.</p>
+        <div class="dashboard-grid" style="grid-template-rows: repeat(auto-fit, minmax(200px, 1fr)); gap:1.2rem;">
+            
+            <!-- 1. HEADER / TITLE CELL -->
+            <div class="card" style="display:flex; flex-direction:column; justify-content:center; padding:2rem;">
+                <div style="font-family:'Fredoka'; color:var(--accent); font-size:1rem; letter-spacing:1px;">ACADEMIC</div>
+                <h2 style="font-family:'Fredoka'; font-size:2rem; line-height:1.1;">Educational<br>Journey</h2>
+                <div style="margin-top:1rem; font-size:0.9rem; color:var(--text-dim);">Foundations of my technical expertise.</div>
             </div>
-            {ed_html}
+
+            <!-- 2. MAIN DEGREE (B.Tech) - Spans 2 cols, 2 rows -->
+            <div class="card span-2" style="background:#fff; position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-start;">
+                <div style="position:absolute; top:2rem; right:2rem; display:flex; gap:10px;">
+                    <div style="background:var(--bg); padding:8px; border-radius:12px; border:1px solid var(--border);">
+                        <img src="{img_to_bytes(e(0).get('logo', ''))}" style="width:60px; height:60px; object-fit:contain;">
+                    </div>
+                    {f'''
+                    <div style="background:var(--bg); padding:8px; border-radius:12px; border:1px solid var(--border);">
+                        <img src="{img_to_bytes(e(0).get('logo_secondary', ''))}" style="width:60px; height:60px; object-fit:contain;">
+                    </div>
+                    ''' if e(0).get('logo_secondary') else ''}
+                </div>
+                
+                <div style="margin-top:0;">
+                    <div class="skill-tag core" style="margin:0 0 1rem 0;">{e(0)['duration']}</div>
+                    <h3 style="font-family:'Fredoka'; font-size:1.8rem; margin-bottom:0.5rem; line-height:1.2;">{e(0)['degree']}</h3>
+                    <div style="font-size:1.1rem; color:var(--text); font-weight:600; margin-bottom:0.2rem;">{e(0)['institution']}</div>
+                    <div style="font-size:0.9rem; color:var(--text-dim); margin-bottom:1rem;">{e(0)['university']}</div>
+                    
+                     <p style="font-size:0.95rem; line-height:1.6; color:#555; max-width:85%; margin-top:1.5rem;">
+                        {e(0)['desc']}
+                    </p>
+                </div>
+
+                <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px dashed var(--border); display:flex; gap:2rem; flex-wrap:wrap;">
+                     <div>
+                        <div style="font-size:0.75rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Percentage</div>
+                        <div style="font-family:'JetBrains Mono'; font-size:1.2rem; font-weight:700; color:var(--accent);">{e(0)['grade']}</div>
+                     </div>
+                     <div>
+                        <div style="font-size:0.75rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">Academic Performance</div>
+                        <div style="font-family:'JetBrains Mono'; font-size:1.1rem; font-weight:600; color:var(--accent-3);">{e(0)['cgpa']}</div>
+                     </div>
+                </div>
+            </div>
+
+            <!-- 3. GROWTH WIDGET -->
+            <div class="card" style="display:flex; align-items:center; justify-content:center; background:var(--accent); color:white; border:none;">
+                <div style="text-align:center;">
+                    <div style="font-size:3.5rem; font-weight:700;">4</div>
+                    <div style="font-family:'JetBrains Mono'; opacity:0.9; font-size:1.2rem;">Years</div>
+                    <div style="font-size:0.9rem; margin-top:0.5rem; opacity:0.9;">Engineering Excellence</div>
+                </div>
+            </div>
+
+            <!-- 4. 12th Grade -->
+            <div class="card span-2" style="display:flex; flex-direction:column; justify-content:space-between;">
+                <div style="display:flex; justify-content:space-between; align-items:start;">
+                    <div>
+                         <span class="skill-tag" style="margin-bottom:0.8rem;">{e(1)['duration']}</span>
+                         <h4 style="font-family:'Fredoka'; font-size:1.4rem; margin-bottom:0.5rem;">{e(1)['degree']}</h4>
+                         <div style="font-weight:600; color:var(--text);">{e(1)['institution']}</div>
+                         <div style="font-size:0.85rem; color:var(--text-dim); margin-top:0.2rem;">{e(1)['board']}</div>
+                    </div>
+                    <img src="{img_to_bytes(e(1).get('logo', ''))}" style="width:50px; height:50px; object-fit:contain; border-radius:8px;">
+                </div>
+                
+                 <p style="font-size:0.9rem; line-height:1.5; color:#666; margin:1.5rem 0;">
+                    {e(1)['desc']}
+                </p>
+
+                <div style="margin-top:auto; padding-top:1rem; border-top:1px solid #f0f0f0;">
+                    <span style="font-size:0.8rem; color:var(--text-dim); margin-right:8px;">Score:</span>
+                    <span style="font-family:'JetBrains Mono'; font-weight:700; color:var(--accent-3); font-size:1.1rem;">{e(1)['grade']}</span>
+                </div>
+            </div>
+
+            <!-- 5. QUOTE / DECORATION (Swapped position) -->
+            <div class="card" style="background:#F0F0F0; border:none; display:flex; align-items:center; justify-content:center; text-align:center; padding:2rem;">
+                <div style="font-family:'Playfair Display', serif; font-style:italic; font-size:1.1rem; color:#666;">
+                    "Learning is not attained by chance, it must be sought for with ardor and attended to with diligence."
+                </div>
+            </div>
+
+            <!-- 6. 10th Grade -->
+            <div class="card span-2" style="display:flex; flex-direction:column; justify-content:space-between;">
+               <div style="display:flex; justify-content:space-between; align-items:start;">
+                    <div>
+                         <span class="skill-tag" style="margin-bottom:0.8rem;">{e(2)['duration']}</span>
+                         <h4 style="font-family:'Fredoka'; font-size:1.4rem; margin-bottom:0.5rem;">{e(2)['degree']}</h4>
+                         <div style="font-weight:600; color:var(--text);">{e(2)['institution']}</div>
+                         <div style="font-size:0.85rem; color:var(--text-dim); margin-top:0.2rem;">{e(2)['board']}</div>
+                    </div>
+                    <img src="{img_to_bytes(e(2).get('logo', ''))}" style="width:50px; height:50px; object-fit:contain; border-radius:8px;">
+                </div>
+                
+                 <p style="font-size:0.9rem; line-height:1.5; color:#666; margin:1.5rem 0;">
+                    {e(2)['desc']}
+                </p>
+
+                <div style="margin-top:auto; padding-top:1rem; border-top:1px solid #f0f0f0;">
+                    <span style="font-size:0.8rem; color:var(--text-dim); margin-right:8px;">GPA:</span>
+                    <span style="font-family:'JetBrains Mono'; font-weight:700; color:var(--accent-3); font-size:1.1rem;">{e(2)['grade']}</span>
+                </div>
+            </div>
+
         </div>
     </div>
     """
@@ -327,8 +418,15 @@ def get_skills_detailed_view_html() -> str:
         html += f"""
         <div class="card" style="margin-bottom:1.5rem;">
             <div style="font-family:'Fredoka'; font-size:1.4rem; margin-bottom:1rem; color:var(--text);">{cat}</div>
-            <div style="display:flex; flex-wrap:wrap; gap:10px;">
-                {tags}
+            <div style="display:flex; flex-wrap:wrap; gap:15px;">
+                {
+                    "".join([f'''
+                    <div style="display:flex; align-items:center; gap:8px; background:var(--bg); padding:8px 16px; border-radius:30px; border:1px solid var(--border);">
+                        <img src="{img_to_bytes(LOGOS.get(item.split()[0], LOGOS.get(item, '')))}" style="width:20px; height:20px; object-fit:contain;" onerror="this.style.display='none'">
+                        <span style="font-weight:600; font-size:0.9rem;">{item}</span>
+                    </div>
+                    ''' for item in items])
+                }
             </div>
         </div>
         """
@@ -350,11 +448,16 @@ def get_certifications_view_html() -> str:
     cert_html = ""
     for c in CERTIFICATIONS:
         cert_html += f"""
-        <div class="card" style="position:relative; transition:transform 0.3s; cursor:default;">
-            <div class="cyber-label" style="color:var(--accent-2)">{c['date']}</div>
-            <h3 style="font-family:'Fredoka'; font-size:1.2rem; margin:0.5rem 0;">{c['title']}</h3>
-            <div style="font-size:0.9rem; color:var(--text-dim);">{c['issuer']}</div>
-            <div style="font-size:0.8rem; margin-top:0.8rem; opacity:0.8;">{c['desc']}</div>
+        <div class="card cert-card" style="padding:0; overflow:hidden; border:none; height:300px; display:flex; flex-direction:column;">
+            <div style="height:160px; overflow:hidden; background:#eee; display:flex; align-items:center; justify-content:center;">
+                <img src="{img_to_bytes(c['image'])}" style="width:100%; height:100%; object-fit:cover; transition:transform 0.5s ease;" class="cert-img">
+            </div>
+            <div style="padding:1.2rem; flex:1; display:flex; flex-direction:column;">
+                <div class="cyber-label" style="color:var(--accent-2)">{c['date']}</div>
+                <h3 style="font-family:'Fredoka'; font-size:1.1rem; margin:0.5rem 0;">{c['title']}</h3>
+                <div style="font-size:0.85rem; color:var(--text-dim);">{c['issuer']}</div>
+                <a href="{c['image']}" target="_blank" style="margin-top:auto; font-size:0.8rem; text-decoration:none; color:var(--accent); font-weight:600;">View Credential &rarr;</a>
+            </div>
         </div>
         """
         
@@ -385,9 +488,19 @@ def get_contact_view_html() -> str:
                     {PROFILE['email']}
                 </a>
                 
-                <div style="display:flex; justify-content:center; gap:20px; font-size:1rem;">
+                <div style="display:flex; justify-content:center; gap:20px; font-size:1rem; margin-bottom:3rem;">
                     <a href="{socials['LinkedIn']}" target="_blank" class="nav-item">LinkedIn</a>
                     <a href="{socials['GitHub']}" target="_blank" class="nav-item">GitHub</a>
+                </div>
+
+                <!-- Resume Hub -->
+                <div style="border-top:1px solid var(--border); padding-top:2rem;">
+                    <h3 style="font-family:'Fredoka'; font-size:1.2rem; margin-bottom:1.5rem;">Resume Versions</h3>
+                    <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
+                        {
+                            "".join([f'<a href="{path}" target="_blank" class="resume-chip">{role}</a>' for role, path in RESUMES.items()])
+                        }
+                    </div>
                 </div>
                 
                 <div style="margin-top:3rem; font-size:0.8rem; color:var(--text-dim);">
