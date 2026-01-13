@@ -15,14 +15,6 @@ from components.html_templates import (
     get_certifications_view_html, get_contact_view_html)
 
 
-
-
-
-
-
-
-
-
 def main() -> None:
     """
     Main execution function.

@@ -1,36 +1,84 @@
 
 /* Mascot Interaction Logic */
-const mascot = document.getElementById('mascot');
-
-function changeEmotion(emotion) {
-    if (!mascot) return;
-    // Remove all state classes
-    mascot.classList.remove('happy', 'surprised', 'cheeky', 'blink');
+// Helper to change emotion on a specific mascot element
+function setMascotEmotion(element, emotion) {
+    if (!element) return;
+    // Remove all state classes from THIS element
+    element.classList.remove('happy', 'surprised', 'cheeky', 'blink', 'angry');
 
     // Add new state if not neutral
     if (emotion !== 'neutral') {
-        mascot.classList.add(emotion);
+        element.classList.add(emotion);
     }
 }
 
-// Mouse Interaction
-if (mascot) {
-    mascot.addEventListener('mouseenter', () => changeEmotion('cheeky'));
-    mascot.addEventListener('mouseleave', () => changeEmotion('neutral'));
-    mascot.addEventListener('click', () => changeEmotion('surprised'));
-}
+// Initialize interactions for all mascots
+function initMascotInteractions() {
+    const mascots = document.querySelectorAll('.view-mascot, .mascot-face');
 
-// Touch Interaction (Mobile Support)
-if (mascot) {
-    mascot.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Prevent scroll while touching mascot
-        changeEmotion('surprised');
-    }, { passive: false });
+    mascots.forEach(m => {
+        // Avoid double binding if run multiple times
+        if (m.dataset.hasInteractions) return;
+        m.dataset.hasInteractions = "true";
 
-    mascot.addEventListener('touchend', () => {
-        setTimeout(() => changeEmotion('neutral'), 500);
+        m.addEventListener('mouseenter', () => {
+            // Experience -> Angry
+            if (m.id === 'mascot-experience') {
+                setMascotEmotion(m, 'angry');
+            }
+            // Education -> Anxious/Shy
+            else if (m.id === 'mascot-education') {
+                setMascotEmotion(m, 'anxious');
+            }
+            else {
+                setMascotEmotion(m, 'cheeky');
+            }
+        });
+        m.addEventListener('mouseleave', () => setMascotEmotion(m, 'neutral'));
+
+        m.addEventListener('click', () => {
+            setMascotEmotion(m, 'surprised');
+        });
+
+        // Scroll (Wheel) Logic
+        m.addEventListener('wheel', () => {
+            // Define reaction based on ID
+            let reaction = 'angry'; // Default reaction
+            if (m.id === 'mascot-education') reaction = 'anxious'; // Education gets anxious
+
+            setMascotEmotion(m, reaction);
+
+            clearTimeout(m.angryTimer);
+            m.angryTimer = setTimeout(() => {
+                // If mouse still hovering...
+                if (m.matches(':hover')) {
+                    // Check specific ID again to persist correct emotion
+                    if (m.id === 'mascot-experience') setMascotEmotion(m, 'angry');
+                    else if (m.id === 'mascot-education') setMascotEmotion(m, 'anxious');
+                    else setMascotEmotion(m, 'neutral'); // Default return
+                } else {
+                    setMascotEmotion(m, 'neutral');
+                }
+            }, 800);
+        }, { passive: true });
+
+        // Touch Support
+        m.addEventListener('touchstart', (e) => {
+            // e.preventDefault(); // removed to allow scrolling unless critical
+            setMascotEmotion(m, 'surprised');
+        }, { passive: true });
+
+        m.addEventListener('touchend', () => {
+            setTimeout(() => setMascotEmotion(m, 'neutral'), 500);
+        });
     });
 }
+
+// Run init
+initMascotInteractions();
+// Re-run on view switch (in case of re-render) - Hook into global switchView if possible or Observer
+setInterval(initMascotInteractions, 1000); // Polling for simplicity in Streamlit env
+
 
 // Eye Tracking Logic
 document.addEventListener('mousemove', (e) => {

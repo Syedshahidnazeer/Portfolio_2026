@@ -910,3 +910,1122 @@ body {
 .confetti-trigger:active {
     transform: scale(0.95) rotate(-2deg);
 }
+
+/* ===========================
+   PAGE-SPECIFIC MASCOTS
+   =========================== */
+
+/* Base Mascot Styles (Shared) */
+.view-mascot-wrapper {
+    width: 100%;
+    max-width: 200px;
+    height: 200px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.view-mascot {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    position: relative;
+    box-shadow:
+        0 40px 70px rgba(0, 0, 0, 0.25),
+        inset -10px -25px 40px rgba(0, 0, 0, 0.15),
+        inset 10px 20px 40px rgba(255, 255, 255, 0.4);
+    /* 3D Lighting */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transform-style: preserve-3d;
+    /* Fluid Transition for everything: transform (hover), background (emotion) */
+    transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+    cursor: pointer;
+    will-change: transform, background;
+    overflow: visible;
+    /* Ensure accessories don't clip */
+}
+
+.view-mascot:hover {
+    transform: scale(1.08) translateY(-5px);
+    box-shadow:
+        0 50px 80px rgba(0, 0, 0, 0.3),
+        inset -10px -25px 40px rgba(0, 0, 0, 0.15),
+        inset 10px 20px 40px rgba(255, 255, 255, 0.4);
+}
+
+.view-mascot:active {
+    transform: scale(0.95);
+    transition: 0.1s;
+}
+
+/* Education Mascot Mouth Fix (Ensure it smiles) */
+.mascot-education.anxious .mouth {
+    background: #333;
+    /* Ensure visible */
+}
+
+/* ===========================
+   SKILL GALAXY ORBIT THEME
+   =========================== */
+
+.skill-galaxy-view {
+    position: relative;
+    min-height: 90vh;
+    /* Full screen feel */
+    overflow: hidden;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000 70%);
+}
+
+.galaxy-container {
+    width: 100%;
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    perspective: 1000px;
+}
+
+/* Central Core (Mascot) */
+.galaxy-core {
+    position: relative;
+    z-index: 10;
+    transform: scale(1.5);
+    /* Big Mascot */
+}
+
+/* Orbit Rings */
+.orbit-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    /* Let clicks pass to planets */
+}
+
+.orbit-ring.inner {
+    width: 400px;
+    height: 400px;
+    animation: orbit-rotate 40s linear infinite;
+}
+
+.orbit-ring.outer {
+    width: 700px;
+    height: 700px;
+    animation: orbit-rotate 60s linear infinite reverse;
+}
+
+/* Skill Planet (The Item) */
+.skill-planet {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    /* Calculate Position on Circle */
+    transform:
+        rotate(calc(360deg / var(--total) * var(--i))) translate(calc(50% - 40px + var(--radius)))
+        /* Radius set by parent size basically */
+        rotate(calc(-360deg / var(--total) * var(--i)));
+    /* Counter Rotate? No, complex */
+
+    /* Better Method: Rotate Parent, Fixed Child? */
+    /* Method:
+       1. Set transform-origin to center of ring.
+       2. Rotate to angle.
+       3. Translate outward (radius).
+       4. Counter-rotate to keep upright.
+    */
+    --angle: calc(360deg / var(--total) * var(--i));
+    transform-origin: center center;
+    /* Actually simple logic:
+       .orbit-ring rotates.
+       .skill-planet is positioned at radius.
+    */
+}
+
+/* Re-thinking CSS Orbit for dynamic counts */
+.orbit-ring .skill-planet {
+    /* Position based on index */
+    /* We need radius. Inner=200px, Outer=350px */
+    --radius: 200px;
+    transform:
+        rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle)));
+    /* Keep upright relative to ring? */
+
+    /* Wait, if ring rotates, we need to counter-rotate the item to keep it upright relative to SCREEN? */
+    animation: counter-rotate 40s linear infinite reverse;
+}
+
+.orbit-ring.outer .skill-planet {
+    --radius: 350px;
+    animation: counter-rotate 60s linear infinite normal;
+    /* Reverse of reverse */
+}
+
+/* Animation Definitions */
+@keyframes orbit-rotate {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes counter-rotate {
+    from {
+        transform: rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle))) rotate(0deg);
+    }
+
+    to {
+        transform: rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle))) rotate(-360deg);
+    }
+}
+
+/* Planet Content */
+.planet-content {
+    background: rgba(30, 30, 30, 0.8);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s;
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.planet-content:hover {
+    transform: scale(1.2);
+    border-color: var(--accent);
+    box-shadow: 0 0 20px var(--accent);
+    background: rgba(0, 0, 0, 0.9);
+}
+
+.planet-icon {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    margin-bottom: 5px;
+}
+
+.planet-icon-placeholder {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.planet-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #fff;
+    max-width: 90%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Base Skills Mascot (Cyber) */
+.mascot-skills {
+    background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+    /* Stronger Glow */
+}
+
+/* VR Visor reused from previous step */
+.mascot-visor {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140px;
+    height: 40px;
+    background: #000;
+    border-radius: 5px;
+    z-index: 20;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+    overflow: hidden;
+}
+
+.mascot-visor::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    right: 10px;
+    height: 4px;
+    background: #00FFFF;
+    transform: translateY(-50%);
+    border-radius: 2px;
+    box-shadow: 0 0 10px #00FFFF;
+    animation: scan-line 2s infinite linear;
+}
+
+.mascot-earpiece {
+    position: absolute;
+    top: 65px;
+    width: 20px;
+    height: 40px;
+    background: #333;
+    z-index: 15;
+}
+
+.mascot-earpiece.left {
+    left: -5px;
+    border-radius: 5px 0 0 5px;
+}
+
+.mascot-earpiece.right {
+    right: -5px;
+    border-radius: 0 5px 5px 0;
+}
+
+.glitch-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    opacity: 0;
+    z-index: -1;
+    display: none;
+}
+
+.mascot-skills:hover .glitch-layer {
+    display: block;
+    animation: glitch-anim 0.3s infinite;
+}
+
+.glitch-layer.red {
+    background: rgba(255, 0, 0, 0.5);
+    transform: translate(5px, 0);
+}
+
+.glitch-layer.blue {
+    background: rgba(0, 0, 255, 0.5);
+    transform: translate(-5px, 0);
+}
+
+/* Animations reused */
+@keyframes scan-line {
+    0% {
+        transform: translateY(-50%) translateX(-40px);
+        width: 20%;
+    }
+
+    50% {
+        transform: translateY(-50%) translateX(0px);
+        width: 80%;
+    }
+
+    100% {
+        transform: translateY(-50%) translateX(120px);
+        width: 20%;
+    }
+}
+
+@keyframes glitch-anim {
+    0% {
+        opacity: 0;
+        transform: translate(0);
+    }
+
+    20% {
+        opacity: 0.8;
+        transform: translate(-5px, 2px);
+    }
+
+    40% {
+        opacity: 0;
+        transform: translate(5px, -2px);
+    }
+
+    60% {
+        opacity: 0.8;
+        transform: translate(-2px, 5px);
+    }
+
+    80% {
+        opacity: 0;
+        transform: translate(2px, -5px);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(0);
+    }
+}
+
+/* Education Mascot - Graduate Theme */
+.mascot-education {
+    background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+}
+
+.mascot-cap {
+    position: absolute;
+    top: -20px;
+    /* Moved up to sit on head */
+    left: 50%;
+    transform: translateX(-50%);
+    /* Removed weird rotations if any, just center X */
+    width: 100px;
+    height: 10px;
+    background: #2C3E50;
+    border-radius: 2px;
+    z-index: 10;
+}
+
+.mascot-cap::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    /* The mortarboard part */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70px;
+    height: 35px;
+    background: #2C3E50;
+    border-radius: 2px;
+    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+    /* Trapezoid shape */
+}
+
+.mascot-cap::after {
+    content: '';
+    position: absolute;
+    top: -25px;
+    right: 10px;
+    width: 4px;
+    height: 40px;
+    background: #F1C40F;
+    /* Gold tassel */
+    transform: rotate(15deg);
+    border-radius: 2px;
+}
+
+/* Anxious / Shy State */
+.mascot-education.anxious {
+    background: linear-gradient(135deg, #7FB3D5 0%, #A9CCE3 100%) !important;
+    /* paler blue/faded */
+    /* Removed shiver animation as requested */
+}
+
+.mascot-education.anxious .cheeks .cheek {
+    opacity: 1 !important;
+    background: #FF6B6B;
+    /* Strong blush */
+    transform: scale(1.2);
+}
+
+.mascot-education.anxious .pupil {
+    transform: translate(10px, 10px) scale(0.8);
+    /* Looking down/away */
+}
+
+.mascot-education.anxious .mouth {
+    width: 20px;
+    height: 10px;
+    /* Taller for curve */
+    border-radius: 0 0 20px 20px;
+    /* Small smile curve */
+    background: #333;
+    transform: translateY(5px) scale(0.8);
+}
+
+.mascot-education.anxious .mouth .tongue {
+    display: none;
+}
+
+@keyframes shiver {
+    0% {
+        transform: translate(1px, 1px) rotate(0deg);
+    }
+
+    10% {
+        transform: translate(-1px, -2px) rotate(-1deg);
+    }
+
+    20% {
+        transform: translate(-3px, 0px) rotate(1deg);
+    }
+
+    30% {
+        transform: translate(3px, 2px) rotate(0deg);
+    }
+
+    40% {
+        transform: translate(1px, -1px) rotate(1deg);
+    }
+
+    50% {
+        transform: translate(-1px, 2px) rotate(-1deg);
+    }
+
+    60% {
+        transform: translate(-3px, 1px) rotate(0deg);
+    }
+
+    70% {
+        transform: translate(3px, 1px) rotate(-1deg);
+    }
+
+    80% {
+        transform: translate(-1px, -1px) rotate(1deg);
+    }
+
+    90% {
+        transform: translate(1px, 2px) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(1px, -2px) rotate(-1deg);
+    }
+}
+
+/* Experience Mascot - Professional 'Suit' Theme */
+.mascot-experience {
+    background: linear-gradient(135deg, #50C878 0%, #3DA35D 100%);
+    box-shadow:
+        0 40px 70px rgba(0, 0, 0, 0.25),
+        inset -10px -25px 40px rgba(0, 0, 0, 0.15),
+        inset 10px 20px 40px rgba(255, 255, 255, 0.4) !important;
+    /* Force highlight */
+}
+
+/* Suit (Collar/Lapels) Alignment */
+.mascot-collar {
+    /* Converting to Suit Lapels */
+    position: absolute;
+    bottom: -10px;
+    /* Moved down to separate from mouth */
+    width: 100px;
+    height: 40px;
+    background: #2C3E50;
+    /* Dark Suit Color */
+    left: 50%;
+    transform: translateX(-50%);
+    clip-path: polygon(0 0, 100% 0, 80% 100%, 20% 100%);
+    z-index: 10;
+}
+
+/* White shirt triangle under the suit/tie */
+.mascot-collar::after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 25px;
+    background: #fff;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    z-index: -1;
+}
+
+.mascot-tie {
+    position: absolute;
+    bottom: -10px;
+    /* Moved down with collar */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 45px;
+    background: #e74c3c;
+    z-index: 11;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.mascot-glasses {
+    display: none;
+}
+
+/* Eyebrows */
+.eyebrows {
+    position: absolute;
+    top: 35px;
+    /* Moved up from 55px to avoid eye overlap */
+    width: 80px;
+    height: 10px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 20;
+}
+
+/* Eyebrows Smoothness */
+.eyebrow {
+    width: 30px;
+    height: 6px;
+    background: #2C3E50;
+    border-radius: 3px;
+    /* Fluid movement for expressions */
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Mouth Smoothness */
+.mouth {
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ANGRY STATE UPDATES */
+.mascot-experience.angry {
+    background: linear-gradient(135deg, #FF6B6B 0%, #C0392B 100%) !important;
+    /* Subtle shake instead of aggressive one */
+    animation: angry-pulse 2s infinite ease-in-out;
+}
+
+/* Fluid Eyebrow Move */
+.mascot-experience.angry .eyebrow.left {
+    transform: rotate(35deg) translateY(6px);
+}
+
+.mascot-experience.angry .eyebrow.right {
+    transform: rotate(-35deg) translateY(6px);
+}
+
+/* Hide teeth when angry */
+.mascot-experience.angry .mouth::after {
+    opacity: 0;
+}
+
+/* Fluid Mouth Move */
+.mascot-experience.angry .mouth {
+    height: 4px !important;
+    background: #333 !important;
+    border-radius: 2px;
+    width: 25px;
+    transform: scaleX(0.8) translateY(5px);
+}
+
+.mascot-experience.angry .mouth .tongue {
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.mascot-experience .mouth::after {
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.mascot-experience.angry .pupil {
+    width: 6px;
+    height: 6px;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+
+.mascot-briefcase {
+    position: absolute;
+    bottom: -25px;
+    right: -15px;
+    width: 35px;
+    height: 28px;
+    background: #8B4513;
+    border-radius: 4px;
+    border: 2px solid #654321;
+}
+
+.mascot-briefcase::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 8px;
+    background: #654321;
+    border-radius: 4px 4px 0 0;
+}
+
+/* Skills Mascot - Robot Theme */
+.mascot-skills {
+    background: linear-gradient(135deg, #9D4EDD 0%, #7B2CBF 100%);
+}
+
+.mascot-antenna {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 35px;
+    background: #555;
+    z-index: 10;
+}
+
+.mascot-antenna::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    background: #FF5400;
+    border-radius: 50%;
+    box-shadow: 0 0 15px #FF5400;
+    animation: antennaBlink 2s infinite;
+}
+
+@keyframes antennaBlink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+}
+
+.mascot-circuit {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    opacity: 0.2;
+}
+
+.mascot-circuit::before,
+.mascot-circuit::after {
+    content: '';
+    position: absolute;
+    background: #fff;
+    border-radius: 2px;
+}
+
+.mascot-circuit::before {
+    top: 30%;
+    left: 10%;
+    width: 30px;
+    height: 2px;
+}
+
+.mascot-circuit::after {
+    top: 60%;
+    right: 10%;
+    width: 25px;
+    height: 2px;
+}
+
+/* Projects Mascot - Builder Theme */
+.mascot-projects {
+    background: linear-gradient(135deg, #FF6B6B 0%, #E63946 100%);
+}
+
+.mascot-hardhat {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 35px;
+    background: #FFD93D;
+    border-radius: 50% 50% 0 0;
+    border: 3px solid #FFC107;
+    z-index: 10;
+}
+
+.mascot-hardhat::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 15px;
+    background: #FFD93D;
+    border-radius: 50%;
+    border: 3px solid #FFC107;
+}
+
+.mascot-tool {
+    position: absolute;
+    bottom: -20px;
+    right: -10px;
+    width: 30px;
+    height: 30px;
+    background: #95A5A6;
+    border-radius: 4px;
+    transform: rotate(45deg);
+}
+
+.mascot-tool::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 3px;
+    background: #7F8C8D;
+}
+
+.mascot-tool::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(90deg);
+    width: 20px;
+    height: 3px;
+    background: #7F8C8D;
+}
+
+/* Certifications Mascot - Achievement Theme */
+.mascot-certifications {
+    background: linear-gradient(135deg, #FFD93D 0%, #FFC107 100%);
+}
+
+.mascot-trophy {
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 45px;
+    z-index: 10;
+}
+
+.mascot-trophy::before {
+    content: '🏆';
+    font-size: 40px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: trophyFloat 3s ease-in-out infinite;
+}
+
+@keyframes trophyFloat {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.mascot-medal {
+    position: absolute;
+    bottom: -15px;
+    right: -15px;
+    width: 35px;
+    height: 35px;
+    background: #FF9F1C;
+    border-radius: 50%;
+    border: 3px solid #FFD93D;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.mascot-medal::before {
+    content: '⭐';
+}
+
+/* Contact Mascot - Friendly Theme */
+.mascot-contact {
+    background: linear-gradient(135deg, #6BCB77 0%, #4D96A9 100%);
+}
+
+.mascot-wave-hand {
+    position: absolute;
+    top: 20%;
+    right: -25px;
+    font-size: 45px;
+    transform-origin: bottom center;
+    animation: wave 2s ease-in-out infinite;
+    z-index: 10;
+}
+
+.mascot-wave-hand::before {
+    content: '👋';
+}
+
+@keyframes wave {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: rotate(14deg);
+    }
+
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: rotate(-8deg);
+    }
+}
+
+.mascot-heart {
+    position: absolute;
+    bottom: -10px;
+    left: -10px;
+    font-size: 25px;
+    animation: heartBeat 1.5s ease-in-out infinite;
+}
+
+.mascot-heart::before {
+    content: '💚';
+}
+
+@keyframes heartBeat {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+/* Shared Eye and Mouth Styles for All Mascots */
+.view-mascot .eyes-row {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 30px;
+    z-index: 5;
+}
+
+.view-mascot .eye {
+    width: 45px;
+    height: 45px;
+    background: #FFF;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    will-change: height, border-radius, transform;
+}
+
+.view-mascot .pupil {
+    width: 28px;
+    height: 28px;
+    background: #2C3E50;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease-out, opacity 0.2s;
+    will-change: transform;
+}
+
+.view-mascot .mouth {
+    width: 45px;
+    height: 22px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 0 0 30px 30px;
+    overflow: hidden;
+    margin-top: 15px;
+    transition: all 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+    position: relative;
+    z-index: 5;
+}
+
+.view-mascot .tongue {
+    width: 35px;
+    height: 25px;
+    background: #EF233C;
+    border-radius: 50%;
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: bottom 0.3s cubic-bezier(0.5, 1.5, 0.5, 1);
+}
+
+.view-mascot .cheeks {
+    position: absolute;
+    width: 100%;
+    top: 60%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 45px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 4;
+}
+
+.view-mascot .cheek {
+    width: 50px;
+    height: 25px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    filter: blur(4px);
+}
+
+/* Mascot Animation States */
+.view-mascot.blink .eye {
+    height: 8px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-color: transparent;
+}
+
+.view-mascot.blink .pupil {
+    opacity: 0;
+}
+
+.view-mascot.happy .eye {
+    height: 40px;
+    border-radius: 50% 50% 0 0;
+    transform: translateY(12px) scaleX(1.1);
+    border-color: rgba(0, 0, 0, 0.3);
+    border-bottom: 0;
+    background: transparent;
+}
+
+.view-mascot.happy .pupil {
+    opacity: 0;
+}
+
+.view-mascot.happy .mouth {
+    height: 60px;
+    width: 85px;
+    border-radius: 10px 10px 65px 65px;
+    transform: translateY(-5px);
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.view-mascot.happy .cheeks {
+    opacity: 1;
+    transform: translateY(-5px);
+}
+
+.view-mascot.surprised .eye {
+    transform: scale(1.15);
+    border-color: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0 4px #FFF inset;
+}
+
+.view-mascot.surprised .pupil {
+    transform: translate(-50%, -50%) scale(0.6) !important;
+}
+
+.view-mascot.surprised .mouth {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    transform: translateY(5px);
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.view-mascot.cheeky .mouth {
+    height: 45px;
+    border-radius: 0 0 45px 45px;
+    transform: rotate(5deg);
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.view-mascot.cheeky .tongue {
+    bottom: -5px;
+}
+
+.view-mascot.cheeky .eye:nth-child(1) {
+    height: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    border: none;
+    transform: rotate(-5deg);
+}
+
+.view-mascot.cheeky .eye:nth-child(1) .pupil {
+    opacity: 0;
+}
+
+/* Responsive Mascots */
+@media (max-width: 768px) {
+    .view-mascot-wrapper {
+        max-width: 150px;
+        height: 150px;
+    }
+
+    .view-mascot {
+        width: 140px;
+        height: 140px;
+    }
+
+    .view-mascot .eye {
+        width: 35px;
+        height: 35px;
+    }
+
+    .view-mascot .pupil {
+        width: 22px;
+        height: 22px;
+    }
+
+    .mascot-cap {
+        width: 80px;
+        top: -12px;
+    }
+
+    .mascot-cap::before {
+        width: 50px;
+        height: 25px;
+        top: -20px;
+    }
+
+    .mascot-wave-hand {
+        font-size: 35px;
+        right: -20px;
+    }
+
+    .mascot-trophy::before {
+        font-size: 30px;
+    }
+}
