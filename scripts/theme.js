@@ -2,21 +2,25 @@ function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
     const isDark = document.body.classList.contains('dark-mode');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    console.log('Theme toggled:', isDark ? 'dark' : 'light');
+    const toggle = document.getElementById('theme-toggle');
+    if (toggle) toggle.textContent = isDark ? '☀️' : '🌙';
 }
 
 function initTheme() {
     const savedTheme = localStorage.getItem('theme');
-    // Default to dark if no preference, or respect saved
-    // Actually, user's current is light. Let's default to saved or light.
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-mode');
+    } else if (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+    }
+    const toggle = document.getElementById('theme-toggle');
+    if (toggle) {
+        const isDark = document.body.classList.contains('dark-mode');
+        toggle.textContent = isDark ? '☀️' : '🌙';
     }
 }
 
-// Run on load
-initTheme();
-// Also attempt to run immediately in case of re-renders
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initTheme);
 } else {

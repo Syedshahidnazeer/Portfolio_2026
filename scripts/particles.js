@@ -1,26 +1,26 @@
-
-/* 
-   Interactive Particle System (Cyber Constellation) 
-   Draws particles on a canvas that connect when close to mouse interaction.
-*/
-
 const canvas = document.getElementById('particles-js');
 
-// Only run if canvas exists (it might be hidden or not rendered yet, but Streamlit renders all HTML mostly)
 if (canvas) {
     const ctx = canvas.getContext('2d');
     let particlesArray = [];
 
-    // Configuration
-    const numberOfParticles = 80;
+    const numberOfParticles = 50;
     const connectDistance = 100;
-    const mouseRadius = 150;
+    const mouseRadius = 120;
+
+    const particleColors = [
+        'rgba(179, 136, 235, 0.6)',
+        'rgba(232, 160, 191, 0.6)',
+        'rgba(168, 213, 186, 0.5)',
+        'rgba(213, 180, 247, 0.5)',
+        'rgba(251, 196, 171, 0.5)'
+    ];
 
     let mouse = {
         x: null,
         y: null,
         radius: mouseRadius
-    }
+    };
 
     window.addEventListener('mousemove', function (event) {
         mouse.x = event.x;
@@ -45,7 +45,6 @@ if (canvas) {
         }
 
         update() {
-            // Check if particle is still within canvas
             if (this.x > canvas.width || this.x < 0) {
                 this.directionX = -this.directionX;
             }
@@ -53,23 +52,22 @@ if (canvas) {
                 this.directionY = -this.directionY;
             }
 
-            // Mouse collision interaction
             let dx = mouse.x - this.x;
             let dy = mouse.y - this.y;
             let distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < mouse.radius + this.size) {
                 if (mouse.x < this.x && this.x < canvas.width - this.size * 10) {
-                    this.x += 2;
+                    this.x += 1.5;
                 }
                 if (mouse.x > this.x && this.x > this.size * 10) {
-                    this.x -= 2;
+                    this.x -= 1.5;
                 }
                 if (mouse.y < this.y && this.y < canvas.height - this.size * 10) {
-                    this.y += 2;
+                    this.y += 1.5;
                 }
                 if (mouse.y > this.y && this.y > this.size * 10) {
-                    this.y -= 2;
+                    this.y -= 1.5;
                 }
             }
 
@@ -80,18 +78,17 @@ if (canvas) {
     }
 
     function init() {
-        // Ensure canvas matches window size
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
         particlesArray = [];
         for (let i = 0; i < numberOfParticles; i++) {
-            let size = (Math.random() * 2) + 0.5; // Small stars
+            let size = (Math.random() * 2.5) + 1;
             let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
             let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-            let directionX = (Math.random() * 0.4) - 0.2; // Slow float
-            let directionY = (Math.random() * 0.4) - 0.2;
-            let color = '#00FF88'; // Neon Green particles
+            let directionX = (Math.random() * 0.3) - 0.15;
+            let directionY = (Math.random() * 0.3) - 0.15;
+            let color = particleColors[Math.floor(Math.random() * particleColors.length)];
 
             particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
         }
@@ -106,16 +103,14 @@ if (canvas) {
 
                 if (distance < (canvas.width / 7) * (canvas.height / 7)) {
                     opacityValue = 1 - (distance / 20000);
-                    // Draw line
                     let distMouse = Math.sqrt(
                         (particlesArray[a].x - mouse.x) ** 2 +
                         (particlesArray[a].y - mouse.y) ** 2
                     );
 
-                    // Only connect if near mouse or occasionally
                     if (distMouse < 200) {
-                        ctx.strokeStyle = 'rgba(0, 255, 136,' + opacityValue + ')';
-                        ctx.lineWidth = 1;
+                        ctx.strokeStyle = 'rgba(179, 136, 235,' + (opacityValue * 0.3) + ')';
+                        ctx.lineWidth = 0.8;
                         ctx.beginPath();
                         ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
                         ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
@@ -142,7 +137,6 @@ if (canvas) {
         init();
     });
 
-    // Run
     setTimeout(() => {
         init();
         animate();
