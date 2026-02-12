@@ -553,11 +553,12 @@ def get_contact_view_html() -> str:
 
 
 def get_footer_html() -> str:
+    socials = PROFILE.get('socials', {})
     social_links = ""
-    if PROFILE.get('linkedin'):
-        social_links += f'<a href="{PROFILE["linkedin"]}" target="_blank" class="social-link" title="LinkedIn">in</a>'
-    if PROFILE.get('github'):
-        social_links += f'<a href="{PROFILE["github"]}" target="_blank" class="social-link" title="GitHub">GH</a>'
+    if socials.get('LinkedIn'):
+        social_links += f'<a href="{socials["LinkedIn"]}" target="_blank" class="social-link" title="LinkedIn">in</a>'
+    if socials.get('GitHub'):
+        social_links += f'<a href="{socials["GitHub"]}" target="_blank" class="social-link" title="GitHub">GH</a>'
     if PROFILE.get('email'):
         social_links += f'<a href="mailto:{PROFILE["email"]}" class="social-link" title="Email">@</a>'
 

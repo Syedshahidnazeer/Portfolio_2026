@@ -145,21 +145,30 @@ if (!isTouchDevice) {
 }
 
 window.switchView = function (viewName) {
-    document.querySelectorAll('.view-section').forEach(v => {
-        v.classList.remove('active-view', 'fade-in');
-        v.style.display = 'none';
-    });
-
+    const current = document.querySelector('.view-section.active-view');
     const target = document.getElementById('view-' + viewName);
-    if (target) {
+    if (!target || target === current) return;
+
+    const reveal = () => {
+        document.querySelectorAll('.view-section').forEach(v => {
+            v.classList.remove('active-view', 'fade-in', 'fade-out');
+            v.style.display = 'none';
+        });
         target.style.display = 'block';
         void target.offsetWidth;
         target.classList.add('active-view', 'fade-in');
-
         setTimeout(() => {
             initSpotlight();
             initCounters();
+            initScrollReveal();
         }, 100);
+    };
+
+    if (current) {
+        current.classList.add('fade-out');
+        setTimeout(reveal, 280);
+    } else {
+        reveal();
     }
 
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -793,3 +802,24 @@ document.addEventListener('keypress', (e) => {
         matrixWord = '';
     }
 });
+
+function initScrollReveal() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+                entry.target.style.animationDelay = `${i * 0.08}s`;
+                entry.target.classList.add('scroll-revealed');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.card, .section-header, .anim-stagger').forEach(el => {
+        if (!el.classList.contains('scroll-revealed')) {
+            el.classList.add('scroll-reveal');
+            observer.observe(el);
+        }
+    });
+}
+
+setTimeout(initScrollReveal, 800);
