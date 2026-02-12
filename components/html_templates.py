@@ -550,3 +550,30 @@ def get_contact_view_html() -> str:
         </div>
     </div>
     """
+
+
+def get_footer_html() -> str:
+    social_links = ""
+    if PROFILE.get('linkedin'):
+        social_links += f'<a href="{PROFILE["linkedin"]}" target="_blank" class="social-link" title="LinkedIn">in</a>'
+    if PROFILE.get('github'):
+        social_links += f'<a href="{PROFILE["github"]}" target="_blank" class="social-link" title="GitHub">GH</a>'
+    if PROFILE.get('email'):
+        social_links += f'<a href="mailto:{PROFILE["email"]}" class="social-link" title="Email">@</a>'
+
+    return f"""
+    <footer class="portfolio-footer">
+        <div class="footer-glow"></div>
+        <div class="footer-content">
+            <div class="footer-brand">SHAHID<span style="color:var(--accent)">.dev</span></div>
+            <div class="footer-tagline">Crafted with 💜 by {PROFILE['name']}</div>
+            <div class="footer-socials">{social_links}</div>
+            <div class="footer-meta">
+                &copy; 2026 &bull; Built with Streamlit &bull; Designed to inspire
+            </div>
+            <div class="footer-shortcut">
+                Press <kbd>Ctrl+K</kbd> to open command palette
+            </div>
+        </div>
+    </footer>
+    """
